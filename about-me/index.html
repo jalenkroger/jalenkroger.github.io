@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalen Kroger | Digital Workshop</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base font */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Gradient text for the hero */
+        .hero-text-gradient {
+            background: linear-gradient(to right, #06b6d4, #3b82f6); /* cyan-500 to blue-500 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* Scroll-in animation classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.17, 0.55, 0.55, 1), transform 0.8s cubic-bezier(0.17, 0.55, 0.55, 1);
+            transition-delay: 0.1s;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 selection:bg-cyan-300 selection:text-cyan-900">
+
+    <!-- Header / Nav -->
+    <header class="fixed top-0 left-0 right-0 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50 z-50">
+        <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold hero-text-gradient">Jalen Kroger</a>
+            <div class="flex space-x-6 text-slate-300">
+                <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
+                <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
+                <a href="#skills" class="hover:text-cyan-400 transition-colors">Skills</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center justify-center text-center px-6 pt-20">
+            <div class="max-w-3xl">
+                <h1 class="text-6xl md:text-8xl font-black mb-4">
+                    <span class="hero-text-gradient">Jalen Kroger</span>
+                </h1>
+                <p class="text-2xl md:text-3xl font-medium text-slate-300 mb-8">
+                    Software Developer & Computer Science Student
+                </p>
+                <p class="text-lg text-slate-400 max-w-xl mx-auto mb-10">
+                    Welcome to my digital workshop. This is where I build, experiment, and showcase my passion for creating unique web applications.
+                </p>
+                <a href="#projects" class="bg-cyan-500 text-slate-900 font-bold py-3 px-8 rounded-lg text-lg hover:bg-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-400/50">
+                    See My Work
+                </a>
+            </div>
+        </section>
+
+        <!-- Container for scrollable content -->
+        <div class="max-w-5xl mx-auto px-6 space-y-32 md:space-y-48 my-32">
+
+            <!-- About Me Section -->
+            <section id="about" class="reveal">
+                <h2 class="text-4xl font-bold mb-8 text-center hero-text-gradient">About Me</h2>
+                <div class="bg-slate-800/60 p-8 md:p-12 rounded-2xl shadow-2xl border border-slate-700/50">
+                    <p class="text-lg md:text-xl text-slate-300 leading-relaxed space-y-6">
+                        <!-- === EDIT THIS SECTION === -->
+                        <span class="text-2xl font-semibold block text-white">Hello! I'm Jalen.</span>
+                        I'm a passionate software developer and Computer Science student, currently studying at the University of Nebraska-Lincoln. My journey in tech is driven by a deep curiosity for how things work and a desire to build applications that are both useful and intuitive.
+                        <br><br>
+                        I have a strong interest in full-stack development, with a particular focus on modern JavaScript frameworks and robust back-end technologies. This site serves as my personal playground for all the miscellaneous web apps and experiments I'm working on.
+                        <br><br>
+                        When I'm not at my keyboard, you can find me exploring new technologies, contributing to open-source projects, or [Your Hobby Here].
+                        <!-- === END EDIT === -->
+                    </p>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="reveal">
+                <h2 class="text-4xl font-bold mb-12 text-center hero-text-gradient">My Web Apps</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Project Card 1 (Placeholder) -->
+                    <div class="bg-slate-800/60 rounded-2xl shadow-2xl border border-slate-700/50 overflow-hidden group transform transition-all duration-300 hover:scale-[1.02] hover:shadow-cyan-500/20">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-bold text-white mb-3">Project Title 1</h3>
+                            <p class="text-slate-400 mb-6">
+                                <!-- === EDIT THIS SECTION === -->
+                                A brief 1-2 sentence description of your project. What does it do? What problem does it solve?
+                                <!-- === END EDIT === -->
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-cyan-900/50 text-cyan-300 text-xs font-medium px-3 py-1 rounded-full">React</span>
+                                <span class="bg-cyan-900/50 text-cyan-300 text-xs font-medium px-3 py-1 rounded-full">Node.js</span>
+                                <span class="bg-cyan-900/50 text-cyan-300 text-xs font-medium px-3 py-1 rounded-full">Tailwind</span>
+                            </div>
+                            <a href="#" class="inline-block font-medium text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                                View Project &rarr;
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 2 (Placeholder) -->
+                    <div class="bg-slate-800/60 rounded-2xl shadow-2xl border border-slate-700/50 overflow-hidden group transform transition-all duration-300 hover:scale-[1.02] hover:shadow-blue-500/20">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-bold text-white mb-3">Project Title 2</h3>
+                            <p class="text-slate-400 mb-6">
+                                <!-- === EDIT THIS SECTION === -->
+                                A brief 1-2 sentence description of your project. What does it do? What problem does it solve?
+                                <!-- === END EDIT === -->
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-blue-900/50 text-blue-300 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                                <span class="bg-blue-900/50 text-blue-300 text-xs font-medium px-3 py-1 rounded-full">Flask</span>
+                                <span class="bg-blue-900/50 text-blue-300 text-xs font-medium px-3 py-1 rounded-full">SQL</span>
+                            </div>
+                            <a href="#" class="inline-block font-medium text-blue-400 group-hover:text-blue-300 transition-colors">
+                                View Project &rarr;
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3 (Placeholder) -->
+                    <div class="bg-slate-800/60 rounded-2xl shadow-2xl border border-slate-700/50 overflow-hidden group transform transition-all duration-300 hover:scale-[1.02] hover:shadow-indigo-500/20">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-bold text-white mb-3">Project Title 3</h3>
+                            <p class="text-slate-400 mb-6">
+                                <!-- === EDIT THIS SECTION === -->
+                                A brief 1-2 sentence description of your project. What does it do? What problem does it solve?
+                                <!-- === END EDIT === -->
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-indigo-900/50 text-indigo-300 text-xs font-medium px-3 py-1 rounded-full">C#</span>
+                                <span class="bg-indigo-900/50 text-indigo-300 text-xs font-medium px-3 py-1 rounded-full">.NET</span>
+                                <span class="bg-indigo-900/50 text-indigo-300 text-xs font-medium px-3 py-1 rounded-full">Azure</span>
+                            </div>
+                            <a href="#" class="inline-block font-medium text-indigo-400 group-hover:text-indigo-300 transition-colors">
+                                View Project &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Card 4 (Placeholder) -->
+                    <div class="bg-slate-800/60 rounded-2xl shadow-2xl border border-slate-700/50 overflow-hidden group transform transition-all duration-300 hover:scale-[1.02] hover:shadow-emerald-500/20">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-bold text-white mb-3">Coming Soon...</h3>
+                            <p class="text-slate-400 mb-6">
+                                <!-- === EDIT THIS SECTION === -->
+                                I'm always working on something new. Check back soon to see my next project!
+                                <!-- === END EDIT === -->
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-emerald-900/50 text-emerald-300 text-xs font-medium px-3 py-1 rounded-full">TBD</span>
+                            </div>
+                            <span class="inline-block font-medium text-emerald-500">
+                                In Progress...
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="reveal">
+                <h2 class="text-4xl font-bold mb-12 text-center hero-text-gradient">Core Toolkit</h2>
+                <div class="flex flex-wrap justify-center gap-3 md:gap-4 max-w-3xl mx-auto">
+                    <!-- === EDIT THIS SECTION === -->
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">JavaScript</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">React</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">Node.js</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">Python</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">C#</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">.NET</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">SQL</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">Git & GitHub</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">HTML5</span>
+                    <span class="bg-slate-700 text-slate-200 text-base font-medium px-5 py-2 rounded-lg shadow-md">Tailwind CSS</span>
+                    <!-- === END EDIT === -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-700/50 mt-32">
+        <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div class="mb-6 md:mb-0">
+                <h3 class="text-2xl font-bold text-white mb-2">Jalen Kroger</h3>
+                <p class="text-slate-400">A showcase of my projects and experiments.</p>
+            </div>
+            <div class="flex space-x-6">
+                <!-- === EDIT YOUR GITHUB USERNAME === -->
+                <a href="https://github.com/[YOUR_USERNAME]" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-cyan-400 transition-colors">
+                    <span class="sr-only">GitHub</span>
+                    <!-- GitHub Icon -->
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.026 2.747-1.026.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg>
+                </a>
+                <!-- This link is correct based on your prompt -->
+                <a href="https://www.linkedin.com/in/jalen-kroger-49757a265/" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-cyan-400 transition-colors">
+                    <span class="sr-only">LinkedIn</span>
+                    <!-- LinkedIn Icon -->
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
+                </a>
+            </div>
+        </div>
+        <div class="text-center py-6 text-sm text-slate-500 border-t border-slate-700/50">
+            &copy; <script>document.write(new Date().getFullYear())</script> Jalen Kroger. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript for scroll animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1, // Trigger when 10% of the element is visible
+                rootMargin: '0px 0px -50px 0px' // Start animation a little before it's fully in view
+            });
+
+            reveals.forEach(reveal => {
+                observer.observe(reveal);
+            });
+        });
+    </script>
+</body>
+</html>

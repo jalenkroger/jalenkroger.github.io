@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Nebraskan Press Play Quiz</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        
+        /* Custom Daily Nebraskan red */
+        .btn-dn-red {
+            background-color: #c51d20; /* A standard red, adjust if you have the exact hex */
+            color: white;
+        }
+        
+        .btn-dn-red:hover {
+            background-color: #a0171a;
+        }
+
+        /* Classes for answer feedback */
+        .btn-correct {
+            background-color: #22c55e !important; /* Tailwind green-500 */
+            color: white !important;
+            border-color: #16a34a !important;
+        }
+        
+        .btn-incorrect {
+            background-color: #ef4444 !important; /* Tailwind red-500 */
+            color: white !important;
+            border-color: #dc2626 !important;
+        }
+        
+        /* Disabled button state during feedback */
+        .btn-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="quiz-container" class="w-full max-w-2xl bg-white rounded-xl shadow-2xl p-6 sm:p-10 transition-all duration-300">
+
+        <!-- Header -->
+        <div class="text-center border-b border-gray-200 pb-4 mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Press Play Quiz</h1>
+            <p class="text-lg text-gray-600">A Daily Nebraskan Quiz</p>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="text-center">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Test Your Knowledge!</h2>
+            <p class="text-gray-600 mb-8">
+                Ready to see how much you know about the bands from the Daily Nebraskan's in-office concert series?
+            </p>
+            <button id="start-button" class="w-full sm:w-auto btn-dn-red font-bold py-3 px-10 rounded-lg text-lg shadow-lg transition-transform transform hover:scale-105">
+                Start Quiz
+            </button>
+        </div>
+
+        <!-- Quiz Screen (Initially Hidden) -->
+        <div id="quiz-screen" class="hidden">
+            <!-- Progress Bar -->
+            <div class="mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span id="question-progress" class="text-sm font-semibold text-gray-600">Question 1 of 5</span>
+                    <span id="current-score" class="text-sm font-semibold text-gray-600">Score: 0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-red-600 h-2.5 rounded-full" style="width: 20%"></div>
+                </div>
+            </div>
+
+            <!-- Question Text -->
+            <h2 id="question-text" class="text-2xl font-semibold text-gray-800 my-6 min-h-[100px]">
+                Loading question...
+            </h2>
+
+            <!-- Options Container -->
+            <div id="options-container" class="flex flex-col space-y-3">
+                <!-- Options will be dynamically inserted here -->
+            </div>
+            
+            <!-- Feedback Message -->
+            <div id="feedback-message" class="mt-4 text-center font-semibold text-lg h-8"></div>
+
+        </div>
+
+        <!-- Result Screen (Initially Hidden) -->
+        <div id="result-screen" class="hidden text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Quiz Complete!</h2>
+            <p id="score-text" class="text-5xl font-bold text-red-600 mb-6">4/5</p>
+            <p id="score-feedback" class="text-xl text-gray-700 mb-8">Great job!</p>
+            <button id="play-again-button" class="w-full sm:w-auto btn-dn-red font-bold py-3 px-10 rounded-lg text-lg shadow-lg transition-transform transform hover:scale-105">
+                Play Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. QUIZ DATA ---
+        // This is the JSON data you provided, stored in a variable.
+        const quizData = {
+          "quizTitle": "Daily Nebraskan Press Play Quiz",
+          "questions": [
+            {
+              "question": "True or False: Joyrager performed for the second installment of the revival of Press Play.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "Which member of Joyrager is a junior chemistry and music major?",
+              "type": "Multiple Choice",
+              "options": ["Alex Hesser", "Atticus Fina", "Zachary Jacobsen", "Matthew Olson"],
+              "answer": "Zachary Jacobsen"
+            },
+            {
+              "question": "True or False: During their Press Play performance, Joyrager played a cover of \"This Love\" by Maroon 5.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "True or False: The Breakroom performed four original songs during their visit to the Daily Nebraskan newsroom.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "How did The Breakroom find their guitarist, Ryan Jelinek?",
+              "type": "Multiple Choice",
+              "options": ["He was in a music theory class with Isaac Nabb.", "He was in the same high school graduating class as Simon Nabb.", "Through a website called BandMix.", "He was friends with the drummer, Bennett Woody."],
+              "answer": "Through a website called BandMix."
+            },
+            {
+              "question": "True or False: The unreleased song \"Sing Out Loud,\" which Joyrager performed at Press Play, is set to be recorded for their next album.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "False"
+            },
+            {
+              "question": "True or False: Goosehens performed at the Daily Nebraskan for Press Play on Sept. 7.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "Which of these songs performed by Goosehens at Press Play was unreleased at the time?",
+              "type": "Multiple Choice",
+              "options": ["Concrete Fountain", "GBU", "NTTFM", "Doesn’t Really Matter"],
+              "answer": "GBU"
+            },
+            {
+              "question": "True or False: Social Cinema’s performance was the eighth installment of the Daily Nebraskan’s Press Play.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "Social Cinema was formed by merging members from which two previous bands?",
+              "type": "Multiple Choice",
+              "options": ["Uh Oh and Jet Set", "Kill Vargas and Death Cow", "The Groove Lagoon and Wicked Bones", "Rilo Kiley and The Flaming Lips"],
+              "answer": "Kill Vargas and Death Cow"
+            },
+            {
+              "question": "True or False: During their Press Play performance, Hold Your Breath played two released songs and two unreleased originals.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "According to their Press Play feature, what is the name of Hold Your Breath's most popular song on Spotify, with over 10,000 streams?",
+              "type": "Multiple Choice",
+              "options": ["Grog (The Pirate Song)", "Satisfied", "A Way To Get By", "Penelope"],
+              "answer": "Penelope"
+            },
+            {
+              "question": "True or False: The Groove Lagoon performed for the fourth installment of Press Play.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "False"
+            },
+            {
+              "question": "What costume did The Groove Lagoon's mysterious figure, \"The Creature,\" wear before donning the creature mask?",
+              "type": "Multiple Choice",
+              "options": ["A Spongebob plushie", "A vintage life-size McDonald’s Grimace costume", "A Sonic the Hedgehog plushie", "A $20 Casio keyboard"],
+              "answer": "A vintage life-size McDonald’s Grimace costume"
+            },
+            {
+              "question": "True or False: Jet Set performed for the fourth installment of the Daily Nebraskan’s Press Play.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "Which of the following songs was performed by Jet Set during their Press Play appearance?",
+              "type": "Multiple Choice",
+              "options": ["Tell Me", "Pest Control", "Green Eyes", "Always"],
+              "answer": "Pest Control"
+            },
+            {
+              "question": "True or False: JDreams The Alien, ANTONIUS, and Big Oso visited the Daily Nebraskan’s office for the third episode of Press Play.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "True or False: The Vix were the first band to be featured on the revival of the Press Play series.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "True"
+            },
+            {
+              "question": "How many original songs did The Vix perform during their Press Play set?",
+              "type": "Multiple Choice",
+              "options": ["One original song", "Two original songs", "Three original songs", "Zero original songs"],
+              "answer": "One original song"
+            },
+            {
+              "question": "True or False: Pagan Athletes performed for the second of The Daily Nebraskan’s Press Play series.",
+              "type": "True/False",
+              "options": ["True", "False"],
+              "answer": "False"
+            }
+          ]
+        };
+
+        // --- 2. DOM ELEMENTS ---
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const startButton = document.getElementById('start-button');
+        const playAgainButton = document.getElementById('play-again-button');
+        
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        
+        const questionProgress = document.getElementById('question-progress');
+        const currentScoreEl = document.getElementById('current-score');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const feedbackMessage = document.getElementById('feedback-message');
+        
+        const scoreText = document.getElementById('score-text');
+        const scoreFeedback = document.getElementById('score-feedback');
+
+        // --- 3. QUIZ STATE ---
+        const TOTAL_QUESTIONS = 5;
+        let currentQuestions = []; // Will hold the 5 random questions
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // --- 4. EVENT LISTENERS ---
+        startButton.addEventListener('click', startQuiz);
+        playAgainButton.addEventListener('click', startQuiz);
+
+        // --- 5. HELPER FUNCTIONS ---
+        
+        /**
+         * Shuffles an array in place using the Fisher-Yates algorithm.
+         * @param {Array} array The array to shuffle.
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        /**
+         * Gets 5 random questions from the main quiz data.
+         */
+        function getRandomQuestions() {
+            const allQuestions = [...quizData.questions]; // Create a copy
+            shuffleArray(allQuestions);
+            return allQuestions.slice(0, TOTAL_QUESTIONS);
+        }
+
+        // --- 6. QUIZ LOGIC ---
+
+        /**
+         * Starts or restarts the quiz.
+         */
+        function startQuiz() {
+            // Reset state
+            currentQuestionIndex = 0;
+            score = 0;
+            currentQuestions = getRandomQuestions();
+            
+            // Update UI
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            
+            // Display the first question
+            displayQuestion();
+        }
+
+        /**
+         * Displays the current question and its options.
+         */
+        function displayQuestion() {
+            // Clear previous feedback
+            feedbackMessage.textContent = '';
+            
+            // Get the current question object
+            const question = currentQuestions[currentQuestionIndex];
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Clear old options
+            optionsContainer.innerHTML = '';
+            
+            // Create and append buttons for new options
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add(
+                    'btn-option',
+                    'w-full',
+                    'text-left',
+                    'p-4',
+                    'rounded-lg',
+                    'border-2',
+                    'border-gray-300',
+                    'bg-white',
+                    'text-gray-700',
+                    'font-semibold',
+                    'transition-all',
+                    'duration-200',
+                    'hover:bg-gray-100',
+                    'hover:border-red-300'
+                );
+                
+                // Add click event to check the answer
+                button.addEventListener('click', () => selectAnswer(button, option, question.answer));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Update progress
+            updateProgress();
+        }
+
+        /**
+         * Handles the user's answer selection.
+         */
+        function selectAnswer(selectedButton, selectedOption, correctAnswer) {
+            // Disable all option buttons
+            const optionButtons = optionsContainer.querySelectorAll('.btn-option');
+            optionButtons.forEach(btn => btn.disabled = true);
+            
+            if (selectedOption === correctAnswer) {
+                // Correct answer
+                score++;
+                selectedButton.classList.add('btn-correct');
+                feedbackMessage.textContent = 'Correct!';
+                feedbackMessage.classList.add('text-green-600');
+                feedbackMessage.classList.remove('text-red-600');
+            } else {
+                // Incorrect answer
+                selectedButton.classList.add('btn-incorrect');
+                feedbackMessage.textContent = 'Sorry, that was incorrect.';
+                feedbackMessage.classList.add('text-red-600');
+                feedbackMessage.classList.remove('text-green-600');
+                
+                // Highlight the correct answer
+                optionButtons.forEach(btn => {
+                    if (btn.textContent === correctAnswer) {
+                        btn.classList.add('btn-correct');
+                    }
+                });
+            }
+            
+            // Update score display
+            currentScoreEl.textContent = `Score: ${score}`;
+            
+            // Wait a moment before loading the next question or results
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < TOTAL_QUESTIONS) {
+                    displayQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500); // 1.5 second delay
+        }
+
+        /**
+         * Updates the progress bar and text.
+         */
+        function updateProgress() {
+            const progressPercent = ((currentQuestionIndex + 1) / TOTAL_QUESTIONS) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            questionProgress.textContent = `Question ${currentQuestionIndex + 1} of ${TOTAL_QUESTIONS}`;
+            currentScoreEl.textContent = `Score: ${score}`;
+        }
+
+        /**
+         * Displays the final results screen.
+         */
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            scoreText.textContent = `${score} / ${TOTAL_QUESTIONS}`;
+            
+            // Set feedback text based on score
+            let feedback = '';
+            const percentage = (score / TOTAL_QUESTIONS) * 100;
+            if (percentage === 100) {
+                feedback = "Perfect! You're a Press Play expert!";
+            } else if (percentage >= 80) {
+                feedback = "Great job! You really know your stuff.";
+            } else if (percentage >= 60) {
+                feedback = "Not bad! You've been paying attention.";
+            } else if (percentage >= 40) {
+                feedback = "Good try! Maybe watch a few more episodes?";
+            } else {
+                feedback = "Keep trying! Time to re-watch the series.";
+            }
+            scoreFeedback.textContent = feedback;
+        }
+
+    </script>
+
+</body>
+</html>

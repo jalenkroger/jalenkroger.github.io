@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The UNL Trail</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <div id="game-container">
+        <header>
+            <h1>The UNL Trail</h1>
+        </header>
+
+        <div id="status-bar">
+            <div><strong>Week:</strong> <span id="stat-week">1</span>/16</div>
+            <div><strong>Grades:</strong> <span id="stat-grades">90</span>%</div>
+            <div><strong>Money:</strong> $<span id="stat-money">250</span></div>
+            <div><strong>Health:</strong> <span id="stat-health">100</span>%</div>
+        </div>
+
+        <div id="game-screen">
+            <div id="event-image">
+                [Image of UNL Welcome Sign]
+            </div>
+            <div id="event-log">
+                </div>
+        </div>
+
+        <div id="actions">
+            <button id="btn-study">Study at Love Library</button>
+            <button id="btn-socialize">Hang out (O Street/Union)</button>
+            <button id="btn-work">Work shift at the Herbie's Market</button>
+            <button id="btn-rest">Rest at the Dorm</button>
+        </div>
+        
+        <div id="decision-prompt" class="hidden">
+            <p id="decision-text"></p>
+            <button id="btn-option1"></button>
+            <button id="btn-option2"></button>
+        </div>
+
+    </div>
+
+</body>
+</html>

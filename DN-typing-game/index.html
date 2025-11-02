@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Nebraskan Typing Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Daily Nebraskan Typing Game</h1>
+
+    <div id="game-container">
+        <div id="countdown"></div>
+
+        <div id="game-content">
+            <p>Type the highlighted line below.</p>
+            
+            <div id="text-to-type">Click "Start" to load a story.</div>
+            
+            <input type="text" id="typing-area" placeholder="Wait for the countdown..." disabled />
+            
+            <div id="stats-container">
+                <button id="start-btn">Start</button>
+                <div id="timer">Time: <strong>0s</strong></div>
+                <div id="wpm">WPM: <strong>0</strong></div>
+            </div>
+        </div>
+        
+        <div id="results-screen" class="hidden">
+            <h2>🎉 Story Complete!</h2>
+            <p id="results-message">Great job!</p>
+            
+            <div id="results-stats">
+                <p>Gross WPM: <strong id="results-wpm">0</strong></p>
+                <p>Accuracy: <strong id="results-accuracy">0</strong>%</p>
+                <p>Adjusted WPM: <strong id="results-adj-wpm">0</strong></p>
+                <p>Characters: <strong id="results-chars">0</strong></p>
+                <p>Errors: <strong id="results-errors">0</strong></p>
+                <p>Time: <strong id="results-time">0</strong>s</p>
+            </div>
+            
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

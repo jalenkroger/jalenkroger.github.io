@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap'); /* A more 'visual novel' font */
+
+body {
+    font-family: 'Merriweather', serif; /* Applied the new font */
+    background-color: #222;
+    color: #eee; /* Lighter text color for contrast */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Pixelated_landscape.svg/1920px-Pixelated_landscape.svg.png'); /* Generic pixel background */
+    background-size: cover;
+    background-position: center;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 960px; /* Slightly wider for backgrounds */
+    height: 720px; /* Slightly taller */
+    background-color: #1a1a1a; /* Darker base for content */
+    border: 8px solid #4a4a4a; /* Thicker, more prominent border */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    position: relative;
+    overflow: hidden;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column;
+}
+
+#background-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out; /* Smooth background transitions */
+    z-index: 1; /* Ensure background is behind everything else */
+}
+
+#sprite-container {
+    position: absolute;
+    width: 100%;
+    /* * UPDATED: Adjusted height/bottom to account for taller 220px dialogue box
+     */
+    height: calc(100% - 240px); /* Leave space for dialogue box */
+    bottom: 220px; /* Adjust to sit above dialogue box */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Aligns sprite to the bottom */
+    z-index: 2; /* Sprites above background */
+}
+
+#character-sprite {
+    max-height: 90%; /* Adjust as needed */
+    width: auto;
+    /* This transition makes characters slide in/out */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); /* Subtle shadow for depth */
+}
+
+#character-sprite.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#dialogue-box {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* * UPDATED: Increased height from 160px to 220px for more room
+     */
+    height: 220px; /* Taller dialogue box */
+    background-color: rgba(0, 0, 0, 0.85); /* More opaque */
+    /* * UPDATED: Changed border color from red to pink
+     */
+    border-top: 5px solid #D94B8F; /* Pink college color for accent */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    z-index: 3; /* Dialogue box on top */
+}
+
+#speaker-name-box {
+    /* * UPDATED: Changed background color from red to pink
+     */
+    background-color: #D94B8F; /* Pink college color */
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 8px;
+    position: absolute;
+    top: -35px; /* Adjust to sit on the border */
+    left: 20px;
+    font-weight: 700; /* Bold */
+    font-size: 1.2em; /* Larger */
+    letter-spacing: 1px; /* Spaced out */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3); /* Subtle shadow */
+}
+
+#dialogue-text {
+    margin: 10px 0 0 0;
+    font-size: 1.15em;
+    line-height: 1.4;
+    flex-grow: 1; /* This makes the text box fill available space */
+    color: #e0e0e0;
+}
+
+#choices-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 10px; /* More spacing between buttons */
+    margin-top: 10px;
+    flex-shrink: 0; /* Prevents choices from being squished */
+}
+
+.choice-button {
+    background-color: rgba(75, 75, 75, 0.9); /* Slightly transparent dark grey */
+    color: #fff;
+    /* * UPDATED: Changed border color from red to pink
+     */
+    border: 2px solid #D94B8F; /* Pink border */
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 1.05em;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    font-family: 'Merriweather', serif; /* Apply new font */
+}
+
+.choice-button:hover {
+    /* * UPDATED: Changed hover color from red to pink
+     */
+    background-color: #FF8DC7; /* Lighter pink highlight */
+    border-color: #fff; /* White border on hover */
+}

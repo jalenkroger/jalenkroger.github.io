@@ -1,0 +1,89 @@
+body {
+    font-family: 'Press Start 2P', cursive; /* A classic pixel font */
+    background-color: #1a1a1a;
+    color: #00ff00; /* Neon green for that retro tech feel */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars */
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Import pixel font */
+
+.game-container {
+    border: 8px solid #00ff00; /* Neon border */
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.7); /* Glowing effect */
+    background-color: #333;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    position: relative;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #ff00ff; /* Another neon color */
+    text-shadow: 2px 2px #00ff00;
+    margin-bottom: 20px;
+}
+
+canvas {
+    background-color: #4a4a4a; /* Darker road */
+    border: 4px solid #fff; /* White road lines */
+    display: block; /* Remove extra space below canvas */
+    margin: 0 auto;
+}
+
+button {
+    background-color: #ff00ff;
+    color: #fff;
+    border: 3px solid #00ff00;
+    padding: 10px 25px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+    transition: background-color 0.2s, color 0.2s;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+button:hover {
+    background-color: #00ff00;
+    color: #ff00ff;
+    border-color: #ff00ff;
+}
+
+#gameOverScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+#gameOverScreen h2 {
+    font-size: 3em;
+    color: #ff00ff;
+    text-shadow: 3px 3px #00ff00;
+    margin-bottom: 15px;
+}
+
+#gameOverScreen p {
+    font-size: 1.5em;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.hidden {
+    display: none;
+}

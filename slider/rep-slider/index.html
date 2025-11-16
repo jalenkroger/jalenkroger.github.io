@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Temple Building Comparison</title>
+    
+    <style>
+        /* Basic page styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 300;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #555;
+            max-width: 600px;
+        }
+
+        /* The main comparison container */
+        .comparison-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px; /* Adjust max width as needed */
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            
+            /* Cursors for interaction */
+            cursor: col-resize;
+            cursor: ew-resize;
+            user-select: none; /* Prevents text selection while dragging */
+        }
+
+        /* The "before" image (bottom layer) */
+        .image-before {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* The "after" image (top layer, inside a clipper) */
+        .image-after {
+            display: block;
+            height: auto;
+            /* Width is set by JavaScript to match the container */
+        }
+
+        /* The overlay div that "clips" the "after" image */
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%; /* Default starting position */
+            height: 100%;
+            overflow: hidden;
+            will-change: width; /* Performance hint */
+        }
+
+        /* The slider handle */
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%; /* Default starting position */
+            width: 4px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transform: translateX(-50%); /* Centers the handle on the line */
+            z-index: 10;
+            pointer-events: none; /* Allows clicks to pass through to container */
+            will-change: left; /* Performance hint */
+        }
+        
+        /* The arrows on the slider handle */
+        .slider-handle::before,
+        .slider-handle::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Left-pointing arrow */
+        .slider-handle::before {
+            border-width: 10px 12px 10px 0;
+            border-color: transparent rgba(255, 255, 255, 0.9) transparent transparent;
+            margin-left: -18px; /* Position left of the handle */
+        }
+
+        /* Right-pointing arrow */
+        .slider-handle::after {
+            border-width: 10px 0 10px 12px;
+            border-color: transparent transparent transparent rgba(255, 255, 255, 0.9);
+            margin-left: 18px; /* Position right of the handle */
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>The Temple Building 1920s vs. Now</h1>
+    
+    <p>
+        <strong>How to use:</strong> On a desktop, click and drag the slider handle. On a mobile device, just tap and drag anywhere on the image.
+    </p>
+
+    <div class="comparison-container" id="comparison-slider">
+        
+        <img src="58.jpg" alt="The Temple Building in the 1920s" class="image-before">
+        
+        <div class="image-overlay">
+            <img src="2025.png" alt="The Temple Building now" class="image-after">
+        </div>
+        
+        <div class="slider-handle"></div>
+
+    </div>
+
+    <script>
+        // Wait for the window to load to ensure all elements are ready
+        window.addEventListener('load', () => {
+            initComparisonSlider();
+        });
+
+        function initComparisonSlider() {
+            const container = document.getElementById('comparison-slider');
+            if (!container) return; // Exit if the container isn't found
+
+            const overlay = container.querySelector('.image-overlay');
+            const slider = container.querySelector('.slider-handle');
+            const afterImage = container.querySelector('.image-after');
+            const beforeImage = container.querySelector('.image-before');
+
+            let isDragging = false;
+
+            // --- Core Functions ---
+
+            // Function to set the slider's position
+            function moveSlider(x) {
+                const rect = container.getBoundingClientRect();
+                let newX = x - rect.left;
+
+                // Clamp the value between 0 and the container's width
+                if (newX < 0) newX = 0;
+                if (newX > rect.width) newX = rect.width;
+
+                // Calculate percentage
+                const percent = (newX / rect.width) * 100;
+
+                // Apply the new position
+                overlay.style.width = percent + '%';
+                slider.style.left = percent + '%';
+            }
+            
+            // Function to synchronize the 'after' image width with the 'before' image
+            // This is crucial for responsiveness and to keep images aligned
+            function syncImageWidths() {
+                // Get the *rendered* width of the "before" image, which sets the container's aspect ratio
+                const containerWidth = beforeImage.offsetWidth;
+                
+                // Set the "after" image's width to match it exactly.
+                // This 'after' image lives inside the overlay, which clips it.
+                afterImage.style.width = containerWidth + 'px';
+            }
+
+            // --- Event Listeners ---
+            
+            // Initial setup
+            syncImageWidths();
+            // Update on window resize
+            window.addEventListener('resize', syncImageWidths);
+
+            // Desktop: Mouse events
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                e.preventDefault(); // Prevent default image drag
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    moveSlider(e.clientX);
+                }
+            });
+
+            // Mobile: Touch events
+            container.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                // No preventDefault() here, to allow for page scrolling if needed
+                // But we will prevent it during move
+            });
+
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging) {
+                    // Prevent page scrolling while dragging the slider
+                    e.preventDefault(); 
+                    moveSlider(e.touches[0].clientX);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

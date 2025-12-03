@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebraska's Rural Behavioral Health Battle - Dynamic Story</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'nebraska-primary': '#C40033', /* Deep Red/Maroon for urgency */
+                        'nebraska-secondary': '#005BBB', /* Blue/Gold contrast */
+                        'shortage': '#C40033',
+                        'rural-contrast': '#F97316', /* Orange/Amber for distance/warning */
+                        'urban-contrast': '#10B981', /* Green for solutions/health */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f3f8;
+        }
+
+        /* Fixed container for the main visuals */
+        .sticky-visual {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1f2937, #374151);
+            z-index: 5;
+        }
+
+        /* Scrolling narrative panels */
+        .scrolly-panel {
+            min-height: 100vh;
+            padding: 5vh 1rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Styling for the text boxes */
+        .narrative-box {
+            position: absolute;
+            bottom: 5vh;
+
+            /* General sizing for horizontal look and visibility */
+            max-width: 40rem;
+            min-height: 8rem;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid #e0e0e0;
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-radius: 1rem;
+            z-index: 10;
+        }
+
+        /* Default starting position (for left-anchored boxes) */
+        .narrative-box.box-left {
+            left: 5%;
+            right: auto;
+            transform: translateX(-50px) scale(0.9);
+        }
+
+        /* Starting position for right-anchored boxes */
+        .narrative-box.box-right {
+            right: 5%;
+            left: auto;
+            transform: translateX(50px) scale(0.9);
+        }
+
+        .narrative-box.active {
+            opacity: 1;
+            transform: translateX(0%) scale(1);
+        }
+
+        /* VISUAL CONTAINER STYLES */
+        .visual-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Chart/Visual Animation Base */
+        .visual-element {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s, transform 0.8s;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .visual-element.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Map specific styles */
+        .map-base {
+            fill: #4b5563;
+        }
+
+        .map-oasis {
+            fill: #10B981;
+        }
+
+        .map-rural {
+            fill: #F97316;
+            cursor: pointer;
+        }
+
+        .map-dot {
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Path animation (for distance line) */
+        .drawLine {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease-in-out forwards;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Pictogram styles */
+        .person-icon {
+            font-size: 24px;
+            margin: 3px;
+            display: inline-block;
+            transition: opacity 0.5s;
+        }
+
+        .pictogram-box {
+            background-color: #1f2937;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+        }
+
+        /* Stigma specific styles */
+        .stigma-text-container {
+            position: relative;
+            font-family: monospace;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 1rem;
+        }
+
+        #gossip-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            opacity: 0.1;
+            font-size: 3rem;
+            white-space: nowrap;
+            animation: gossip 10s linear infinite;
+        }
+
+        @keyframes gossip {
+            0% {
+                transform: translate(-50%, -50%) rotate(5deg);
+            }
+
+            50% {
+                transform: translate(-55%, -55%) rotate(-5deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(5deg);
+            }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="font-sans">
+
+    <!-- 1. Fixed Visual Container (The "Sticky" Part) -->
+    <div class="sticky-visual" id="sticky-visual-wrapper">
+
+        <!-- Persistent Intro Layer -->
+        <div id="intro-title-layer"
+            class="absolute inset-0 flex flex-col justify-center items-center z-20 transition-opacity duration-100 pointer-events-none p-10">
+            <h1 class="text-5xl font-extrabold text-white text-center">Nebraska’s rural behavioral health battle</h1>
+            <p class="text-2xl font-light text-gray-300 mt-4">By Rayna Pytlik</p>
+        </div>
+
+        <!-- Dynamic Visuals Container -->
+        <div class="visual-container p-10 relative z-10" id="visual-content">
+            <!-- Content injected by JS -->
+        </div>
+
+    </div>
+
+    <!-- 2. Scrolling Narrative Container -->
+    <div id="scrolly-container" class="relative z-10">
+
+        <!-- Initial Blank Scroll Space for Intro (Reduced size for tighter pacing) -->
+        <div class="scrolly-panel min-h-[40vh]"></div>
+
+        <!-- Panel 1: The Shortage (95%) - LEFT ALIGNED -->
+        <div class="scrolly-panel" data-step="1">
+            <div class="narrative-box box-left p-4" data-step-text="1">
+                <h2 class="text-2xl font-extrabold text-nebraska-primary mb-2">A State-Wide Void in Care</h2>
+                <p class="text-sm leading-relaxed">Spanning across Nebraska, 88 out of 93 counties are designated Mental
+                    Health Professional Shortage Areas, according to the Behavioral Health Education Center of Nebraska.
+                    Nearly 95% of Nebraska counties are identified as having a shortage of mental health professionals,
+                    and 29 Nebraska counties have no behavioral health providers.</p>
+                <p class="text-xs mt-2 text-gray-600">Rural Nebraskans face barriers and challenges in accessing mental
+                    health services and care. Culture, geographic location and accessibility are a few factors that
+                    impact mental health in areas like Nebraska’s Panhandle.</p>
+            </div>
+        </div>
+
+        <!-- Panel 2: The Suicide Crisis & Provider Ratios (Pictogram) - RIGHT ALIGNED -->
+        <div class="scrolly-panel" data-step="2">
+            <div class="narrative-box box-right p-4" data-step-text="2">
+                <h2 class="text-2xl font-extrabold text-nebraska-primary mb-2">The Deadly Disparity</h2>
+                <p class="text-sm leading-relaxed">Nearly one in five adults has a mental illness, according to the
+                    Substance Abuse and Mental Health Services Administration. From 2016 to 2022, the rate of rural
+                    Nebraska resident suicides was 20.2 per 100,000 residents, while the urban Nebraska rate was 10.0
+                    per 100,000 residents.</p>
+                <p class="text-sm mt-2 font-semibold">Rural Nebraska has three practicing psychiatrists per 100,000
+                    residents, compared to 11.8 per 100,000 residents in Urban Nebraska. Rural Nebraska has 8.7
+                    practicing psychologists per 100,000 residents compared to Urban Nebraska’s 27.9, according to
+                    BHECN.</p>
+            </div>
+        </div>
+
+        <!-- Panel 3: The Cost of Distance (Interactive Map Abstraction) - LEFT ALIGNED -->
+        <div class="scrolly-panel" data-step="3">
+            <div class="narrative-box box-left p-4" data-step-text="3">
+                <h2 class="text-2xl font-extrabold text-nebraska-primary mb-2">Isolated communities must travel to seek
+                    care</h2>
+                <p class="text-sm leading-relaxed">Finding time to travel to appointments can be difficult and takes up
+                    a large chunk of the day. A barrier that many rural Nebraskans face in accessing mental health
+                    services is transportation. The costs of transportation are additional barriers that Nebraskans
+                    face.</p>
+                <blockquote class="italic mt-2 p-3 border-l-4 border-nebraska-secondary bg-gray-100 rounded-md text-xs">
+                    "One of the things that gets in the way of clients being able to travel to appointments is the cost
+                    of that, the cost of the gas. Do they have a reliable car? Can they afford to take the time off work
+                    that it takes to drive an hour to be seen and then have an hour appointment, and then drive an hour
+                    back?"
+                    <footer class="mt-1 text-xs font-semibold">— Dr. Cate Jones-Hazledine</footer>
+                </blockquote>
+            </div>
+        </div>
+
+        <!-- Panel 4: The Stigma Barrier (Visual Change) - RIGHT ALIGNED -->
+        <div class="scrolly-panel" data-step="4">
+            <div class="narrative-box box-right p-4" data-step-text="4">
+                <h2 class="text-2xl font-extrabold text-nebraska-primary mb-2">Despite efforts, stigma still lingers in
+                    communities</h2>
+                <p class="text-sm leading-relaxed">Over the 21 years Dr. Cate-Hazeline has been practicing in Rushville,
+                    she says stigma around mental health is still very prevalent. The smaller community feel can impact
+                    one’s willingness to seek help.</p>
+                <p class="mt-2 text-sm font-semibold text-nebraska-secondary">Participants in focus groups described
+                    parking their vehicles a few blocks away from their therapist’s office to avoid being seen by
+                    others. The message is “Live up to a different kind of strength. The strength to ask for help.”</p>
+            </div>
+        </div>
+
+        <!-- Panel 5: Solutions and Hope (Workforce Growth Chart) - LEFT ALIGNED -->
+        <div class="scrolly-panel" data-step="5">
+            <div class="narrative-box box-left p-4" data-step-text="5">
+                <h2 class="text-2xl font-extrabold text-urban-contrast mb-2">Gaps in mental health care remain</h2>
+                <p class="text-sm leading-relaxed">Despite improvements in providers, there is a need for psychiatrists
+                    and medication management. According to BHECN’s 2025 Workforce Report, practicing behavioral health
+                    providers increased by 24% in rural Nebraska. Psychiatric physician assistants increased by 267%,
+                    and licensed independent mental health practitioners increased by 225%.</p>
+                <p class="mt-2 text-sm font-semibold">Rural Nebraska is facing challenges to address the need for
+                    behavioral health care, but it is not going unnoticed. Leaders in behavioral health are working
+                    together to address residents’ challenges and provide mental health services.</p>
+            </div>
+        </div>
+
+        <!-- Final Panel: Conclusion and Credits - RIGHT ALIGNED -->
+        <div class="scrolly-panel min-h-[80vh]" data-step="6">
+            <div class="narrative-box box-right p-4" data-step-text="6">
+                <h2 class="text-2xl font-extrabold text-nebraska-secondary mb-2">Hope on the Horizon</h2>
+                <p class="text-sm leading-relaxed">Despite the vast challenges of distance, cost, and stigma, efforts
+                    are being made to normalize mental health care—from bringing services directly into schools to
+                    expanding telehealth options. The goal is clear: ensure every Nebraskan has access to the support
+                    they need.</p>
+                <p class="mt-2 text-xs text-gray-600">Source: Nebraska News Service • Data: BHECN, CDC, SAMHSA</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        const steps = Array.from(document.querySelectorAll('.scrolly-panel'));
+        const visualContent = document.getElementById('visual-content');
+        const introTitleLayer = document.getElementById('intro-title-layer');
+
+        let currentStep = 0;
+
+        // --- MAPPED LOCATIONS (Abstracted Nebraska Geometry) ---
+        const NE_LOCATIONS = [
+            // OASES (Non-Shortage/Primary Access)
+            { id: 'omaha', name: 'Omaha', x: 890, y: 350, type: 'oasis' },
+            { id: 'lincoln', name: 'Lincoln', x: 800, y: 380, type: 'oasis' },
+            { id: 'norfolk', name: 'Norfolk', x: 700, y: 250, type: 'oasis' },
+            { id: 'columbus', name: 'Columbus', x: 670, y: 330, type: 'oasis' },
+            { id: 'grand_island', name: 'Grand Island', x: 550, y: 400, type: 'oasis' },
+
+            // RURAL SHORTAGE AREAS
+            { id: 'scottsbluff', name: 'Scottsbluff', x: 100, y: 200, type: 'rural', nearest: 'omaha' },
+            { id: 'northplatte', name: 'North Platte', x: 350, y: 420, type: 'rural', nearest: 'grand_island' },
+            { id: 'lexington', name: 'Lexington', x: 450, y: 450, type: 'rural', nearest: 'grand_island' },
+            { id: 'kearney', name: 'Kearney', x: 500, y: 430, type: 'rural', nearest: 'grand_island' },
+            { id: 'hastings', name: 'Hastings', x: 600, y: 450, type: 'rural', nearest: 'grand_island' },
+            { id: 'rushville', name: 'Rushville', x: 250, y: 100, type: 'rural', nearest: 'norfolk' },
+            { id: 'alliance', name: 'Alliance', x: 150, y: 300, type: 'rural', nearest: 'scottsbluff' },
+            { id: 'valentine', name: 'Valentine', x: 450, y: 150, type: 'rural', nearest: 'norfolk' },
+        ];
+
+        // Helper to get nearest oasis coordinates for path drawing
+        function getOasisCoords(oasisId) {
+            return NE_LOCATIONS.find(loc => loc.id === oasisId);
+        }
+        // --- END MAPPED LOCATIONS ---
+
+        // Function to create and animate the Pictogram (for step 2)
+        function createPictogram() {
+            const urbanIcons = 10;
+            const ruralIcons = 20;
+
+            const iconSvg = (count, color, label) => `
+                <div class="text-center p-4 w-1/2">
+                    <h4 class="text-xl font-bold text-white mb-3">${label}</h4>
+                    <div class="h-64 flex flex-wrap justify-center content-start border-b-2 border-gray-600 p-2">
+                        ${Array.from({ length: count }).map((_, i) => `
+                            <i class="fas fa-user person-icon text-${color}" style="opacity: 0;" data-index="${i}"></i>
+                        `).join('')}
+                    </div>
+                    <p class="mt-2 text-lg font-extrabold text-${color} leading-none">${(count * 10) / 1000 * 1000} per 100,000</p>
+                    <p class="text-sm text-gray-400">Suicide Rate (2016-2022)</p>
+                </div>
+            `;
+
+            visualContent.innerHTML = `
+                <div class="visual-element active flex justify-center items-center w-full max-w-[75%] pictogram-box">
+                    <div class="flex justify-around w-full">
+                        ${iconSvg(urbanIcons, 'urban-contrast', 'URBAN NEBRASKA')}
+                        ${iconSvg(ruralIcons, 'shortage', 'RURAL NEBRASKA')}
+                    </div>
+                </div>
+            `;
+
+            // Sequential icon animation
+            const allIcons = document.querySelectorAll('.person-icon');
+            let delay = 0;
+            allIcons.forEach(icon => {
+                setTimeout(() => {
+                    icon.style.opacity = 1;
+                }, delay);
+                delay += 30; // 30ms delay per icon
+            });
+        }
+
+        // Function to create the interactive distance map (for step 3)
+        function createMap() {
+            // Simplified Nebraska County grid simulation for visual representation: 10 columns, 5 rows (50 segments)
+            const gridCols = 10;
+            const gridRows = 5;
+            const segmentWidth = 900 / gridCols;
+            const segmentHeight = 400 / gridRows;
+
+            let countySegments = '';
+            let segmentIndex = 0;
+
+            // Shortage is 88/93 (~95%). We'll color 48/50 segments red and 2 green.
+            const shortageSegments = 48;
+            const colors = new Array(shortageSegments).fill('#C40033').concat(new Array(50 - shortageSegments).fill('#10B981'));
+
+            // Simple shuffle for slightly randomized coloring
+            colors.sort(() => Math.random() - 0.5);
+
+            visualContent.innerHTML = `
+                <div class="visual-element active w-full h-full flex flex-col items-center justify-center p-2 max-w-[75%]">
+                    <svg id="nebraska-map-svg" viewBox="0 0 1000 500" class="w-full h-auto max-h-[85vh]">
+                        <!-- Real Nebraska Map Image -->
+                        <image href="nebraska_map.png" x="0" y="0" width="1000" height="500" preserveAspectRatio="xMidYMid slice" />
+                        <!-- <text x="500" y="250" text-anchor="middle" font-size="40" font-weight="bold" fill="#1f2937">NEBRASKA</text> -->
+
+                        <!-- Distance Path Layer -->
+                        <path id="distance-path" stroke="${tailwind.config.theme.extend.colors['rural-contrast']}" stroke-dasharray="10 5" stroke-width="4" stroke-linecap="round" fill="none" class="opacity-0"/>
+                        
+                        <!-- Locations (Mapped directly onto the abstract space) -->
+                        ${NE_LOCATIONS.map(loc => {
+                const isOasis = loc.type === 'oasis';
+                return `
+                            <circle cx="${loc.x}" cy="${loc.y}" r="${isOasis ? 15 : 10}" 
+                                class="${isOasis ? 'map-oasis' : 'map-rural'} shadow-xl map-dot" 
+                                data-x="${loc.x}" data-y="${loc.y}" data-name="${loc.name}" data-nearest="${loc.nearest || ''}" />
+                            <text x="${loc.x + (isOasis ? 20 : 0)}" 
+                                y="${loc.y + (isOasis ? -10 : 25)}" 
+                                fill="white" font-size="14" font-weight="${isOasis ? 'bold' : 'normal'}" 
+                                text-anchor="${isOasis ? 'start' : 'middle'}">${loc.name}</text>
+                            `;
+            }).join('')}
+                    </svg>
+                    <div id="distance-info" class="mt-4 p-3 bg-white/90 text-lg font-bold rounded-lg shadow-lg text-nebraska-primary opacity-0 transition-opacity duration-500">
+                        Click a shortage area (orange dot) to trace the commute...
+                    </div>
+                </div>
+            `;
+
+            // Get references after DOM update
+            const distancePath = document.getElementById('distance-path');
+            const distanceInfo = document.getElementById('distance-info');
+
+            // Pass references to setupMapListeners
+            setupMapListeners(distancePath, distanceInfo);
+        }
+
+        // Map interaction logic for Step 3
+        function setupMapListeners(distancePath, distanceInfo) {
+            const ruralDots = document.querySelectorAll('.map-rural');
+
+            function handleDotClick(event) {
+                const ruralDot = event.currentTarget;
+                const rx = parseFloat(ruralDot.getAttribute('data-x'));
+                const ry = parseFloat(ruralDot.getAttribute('data-y'));
+                const ruralName = ruralDot.getAttribute('data-name');
+                const nearestOasisId = ruralDot.getAttribute('data-nearest');
+
+                if (!distancePath || !distanceInfo) return;
+
+                const closestOasis = getOasisCoords(nearestOasisId);
+
+                if (!closestOasis) return;
+
+                // 1. Draw Path
+                const pathD = `M ${rx} ${ry} L ${closestOasis.x} ${closestOasis.y}`;
+                distancePath.setAttribute('d', pathD);
+
+                // Reset and animate the path
+                let pathLength = 0;
+                try {
+                    pathLength = distancePath.getTotalLength();
+                } catch (e) {
+                    pathLength = 1000;
+                }
+
+                distancePath.style.strokeDasharray = pathLength;
+                distancePath.style.strokeDashoffset = pathLength;
+                distancePath.classList.remove('opacity-0');
+                distancePath.classList.remove('drawLine');
+                distancePath.offsetHeight;
+                distancePath.classList.add('drawLine');
+
+                // 2. Update Info Box
+                distanceInfo.style.opacity = '0';
+                setTimeout(() => {
+                    distanceInfo.innerHTML = `
+                        <span class="text-rural-contrast">${ruralName}</span> to <span class="text-urban-contrast">${closestOasis.name}</span>: 
+                        <span class="text-3xl font-extrabold block mt-1">> 1 HOUR DRIVE</span>
+                    `;
+                    distanceInfo.style.opacity = '1';
+                }, 1000);
+            }
+
+            ruralDots.forEach(dot => {
+                dot.addEventListener('click', handleDotClick);
+            });
+
+            // Auto-click the first one when the map loads
+            setTimeout(() => {
+                const scottsbluff = document.querySelector('.map-rural[data-name="Scottsbluff"]');
+                if (scottsbluff) {
+                    handleDotClick({ currentTarget: scottsbluff });
+                }
+            }, 500);
+        }
+
+        // Function to create and animate the Workforce Chart (for step 5)
+        function createWorkforceChart(data) {
+            visualContent.innerHTML = `
+                <div class="visual-element active w-full h-full p-4 flex flex-col justify-end items-center max-w-[75%]">
+                    <h3 class="text-xl font-bold text-white mb-6">Rural Nebraska Workforce Growth (2025 Report)</h3>
+                    <div class="bar-chart-container active w-11/12 h-3/5 p-4 bg-gray-800 rounded-xl shadow-2xl relative flex justify-around items-end gap-4">
+                        ${data.bars.map((bar, index) => `
+                            <div class="flex flex-col items-center w-1/4 h-full">
+                                <span class="text-4xl font-extrabold text-${bar.color} mb-2 transition-transform duration-1000 ease-out" style="transform: translateY(100%);" data-value="${bar.value}">+${bar.value}%</span>
+                                <div class="bar bg-${bar.color} w-full shadow-xl" 
+                                    style="height: 0%; border-radius: 0.5rem 0.5rem 0 0;" 
+                                    data-height="${bar.value}">
+                                </div>
+                                <p class="text-xs p-1 mt-2 text-white text-center font-bold">${bar.label}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p class="mt-4 text-xs text-gray-400">Despite growth, long wait times and provider shortages persist.</p>
+                </div>
+            `;
+
+            // Trigger animation after DOM update
+            setTimeout(() => {
+                const max = data.max;
+                document.querySelectorAll('.bar').forEach(barEl => {
+                    const barValue = parseFloat(barEl.getAttribute('data-height'));
+                    barEl.style.height = `${(barValue / max) * 80}%`; // Scale to 80% of inner container height
+                });
+                document.querySelectorAll('.bar-chart-container span[data-value]').forEach(span => {
+                    span.style.transform = 'translateY(0)';
+                });
+            }, 100);
+        }
+
+        // Function to create the Pie Chart for 95% shortage (Step 1)
+        function createPieChart() {
+            // Data: 95% Shortage (Red), 5% Access (Green)
+            const shortagePercent = 95;
+            const accessPercent = 100 - shortagePercent;
+            const radius = 150;
+            const center = 200;
+
+            // Calculate SVG path for the 95% arc (almost a full circle)
+            const angle = shortagePercent / 100 * 360;
+            const largeArcFlag = angle > 180 ? 1 : 0;
+            const endX = center + radius * Math.sin(angle * Math.PI / 180);
+            const endY = center - radius * Math.cos(angle * Math.PI / 180);
+
+            const shortagePath = [
+                `M ${center},${center}`,
+                `L ${center},${center - radius}`,
+                `A ${radius},${radius} 0 ${largeArcFlag} 1 ${endX},${endY}`,
+                'Z'
+            ].join(' ');
+
+            // The remaining 5% arc (the access slice)
+            const accessPath = [
+                `M ${center},${center}`,
+                `L ${endX},${endY}`,
+                `A ${radius},${radius} 0 0 1 ${center},${center - radius}`,
+                'Z'
+            ].join(' ');
+
+
+            visualContent.innerHTML = `
+                <div class="visual-element active text-center w-full h-full flex flex-col items-center justify-center max-w-[75%]" id="pie-chart-container">
+                    <h3 class="text-3xl font-extrabold text-white mb-8">Nebraska Behavioral Health Provider Shortage</h3>
+                    <svg viewBox="0 0 400 400" class="w-full h-auto max-w-sm">
+                        
+                        <!-- Pie Chart Segments -->
+                        <path d="${shortagePath}" fill="${tailwind.config.theme.extend.colors['shortage']}" id="shortage-slice" style="transition: transform 1.5s ease-out; transform-origin: center; transform: scale(0);"/>
+                        <path d="${accessPath}" fill="${tailwind.config.theme.extend.colors['urban-contrast']}" id="access-slice" style="transition: transform 1.5s ease-out; transform-origin: center; transform: scale(0);"/>
+
+                        <!-- Center hole for Donut effect and text -->
+                        <circle cx="${center}" cy="${center}" r="70" fill="#1f2937"/>
+                        
+                        <!-- Center Text -->
+                        <text x="${center}" y="${center + 10}" text-anchor="middle" font-size="50" font-weight="extrabold" fill="white" id="center-percent" style="opacity: 0; transition: opacity 1s 0.8s;">95%</text>
+                        <text x="${center}" y="${center + 45}" text-anchor="middle" font-size="20" fill="#ccc" id="center-label" style="opacity: 0; transition: opacity 1s 1s;">SHORTAGE</text>
+                    </svg>
+
+                    <!-- Legend -->
+                    <div class="mt-8 flex space-x-6 text-white text-lg">
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 rounded-full bg-shortage mr-2"></span>
+                            <span>Shortage Areas (95%)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 rounded-full bg-urban-contrast mr-2"></span>
+                            <span>Sufficient Access (5%)</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Animate slices and text
+            setTimeout(() => {
+                document.getElementById('shortage-slice').style.transform = 'scale(1)';
+                document.getElementById('access-slice').style.transform = 'scale(1)';
+                document.getElementById('center-percent').style.opacity = 1;
+                document.getElementById('center-label').style.opacity = 1;
+            }, 50);
+        }
+
+
+        // --- Step Definitions and Orchestration ---
+        const stepDefinitions = {
+            0: {
+                // Initial intro state (Handled outside of updateVisual by cross-fade logic)
+                visualHtml: ``,
+                animation: () => { }
+            },
+            1: {
+                // Shortage - Pie Chart (LEFT ALIGNED)
+                visualHtml: '',
+                animation: () => {
+                    createPieChart();
+                }
+            },
+            2: {
+                // Suicide and Provider Ratios - Pictogram (RIGHT ALIGNED)
+                visualHtml: '',
+                animation: () => {
+                    createPictogram();
+                }
+            },
+            3: {
+                // Transportation - Interactive County Map (LEFT ALIGNED)
+                visualHtml: '',
+                animation: () => {
+                    createMap();
+                }
+            },
+            4: {
+                // Stigma - Visual Metaphor: Dynamic Text/Shadow (RIGHT ALIGNED)
+                visualHtml: `
+                    <div class="visual-element active text-center w-full h-full flex items-center justify-center max-w-[75%]">
+                        <div class="stigma-text-container w-4/5 h-4/5 flex flex-col justify-center items-center">
+                            <div id="gossip-line">THEY SAW MY CAR AT THE CLINIC THEY SAW MY CAR AT THE CLINIC THEY SAW MY CAR AT THE CLINIC</div>
+                            <h2 class="text-4xl font-extrabold text-white z-20 transition-opacity duration-1000" id="main-stigma-text" style="opacity: 0;">PARKING BLOCKS AWAY</h2>
+                            <p class="text-lg text-gray-300 mt-4 z-20 transition-opacity duration-1000" id="sub-stigma-text" style="opacity: 0;">To avoid being seen by others in the small community.</p>
+                        </div>
+                    </div>
+                `,
+                animation: () => {
+                    setTimeout(() => {
+                        const mainText = document.getElementById('main-stigma-text');
+                        if (mainText) mainText.style.opacity = 1;
+
+                        const subText = document.getElementById('sub-stigma-text');
+                        if (subText) subText.style.opacity = 1;
+                    }, 500);
+                }
+            },
+            5: {
+                // Solutions - Workforce Growth Bar Chart (LEFT ALIGNED)
+                visualHtml: '',
+                animation: () => {
+                    createWorkforceChart({
+                        max: 300,
+                        bars: [
+                            { label: "Providers", value: 24, color: 'nebraska-secondary' },
+                            { label: "Psych P.A.s", value: 267, color: 'urban-contrast' },
+                            { label: "LIMHPs", value: 225, color: 'urban-contrast' }
+                        ]
+                    });
+                }
+            },
+            6: {
+                // Final Conclusion (RIGHT ALIGNED)
+                visualHtml: `
+                    <div class="visual-element active text-center flex flex-col justify-center items-center max-w-[75%]">
+                        <h2 class="text-5xl font-extrabold text-urban-contrast mb-4">The Work Continues</h2>
+                        <p class="text-lg text-gray-300 max-w-lg">Leaders are fighting to provide mental health services and change the narrative: Asking for help is a sign of strength.</p>
+                        <div class="mt-8">
+                            <i class="fas fa-heart text-shortage text-4xl mx-2"></i>
+                            <i class="fas fa-brain text-urban-contrast text-4xl mx-2"></i>
+                            <i class="fas fa-hands-helping text-nebraska-secondary text-4xl mx-2"></i>
+                        </div>
+                    </div>
+                `,
+                animation: () => { }
+            }
+        };
+
+
+        // Function to update the visual state
+        function updateVisual(step, isCrossFading = false) {
+
+            if (step === 0 && !isCrossFading) {
+                // Initial load: ensure headline is visible
+                visualContent.innerHTML = stepDefinitions[0].visualHtml;
+                currentStep = 0;
+                return;
+            }
+
+            const definition = stepDefinitions[step];
+            if (!definition) return;
+
+            // Don't update DOM if we're in the middle of a cross-fade transition
+            if (!isCrossFading) {
+                visualContent.innerHTML = definition.visualHtml;
+                visualContent.classList.add('p-10');
+            }
+
+            // 2. Run the step-specific animation
+            const visualElement = document.querySelector('.visual-element');
+            if (visualElement && !isCrossFading) {
+                setTimeout(() => visualElement.classList.add('active'), 50);
+            }
+
+            if (definition.animation) {
+                definition.animation();
+            }
+
+            if (!isCrossFading) {
+                currentStep = step;
+            }
+        }
+
+        // Function to handle scroll and intersection
+        function handleScroll() {
+            let activeStep = 0;
+            const scrollThreshold = window.innerHeight * 0.4; // 40% into the viewport
+            const step1El = steps[1]; // Get the first actual content panel
+
+            // ------------------------------------
+            // 1. Cross-Fade Logic (Step 0 to Step 1)
+            // ------------------------------------
+            if (step1El) {
+                const rect = step1El.getBoundingClientRect();
+                const scrollStart = window.innerHeight * 0.2; // Start fading 20% down
+                const scrollEnd = window.innerHeight * 0.8; // Finish fading 80% down
+                const scrollHeight = scrollEnd - scrollStart;
+
+                if (rect.top <= scrollEnd && rect.top >= scrollStart) {
+                    // Calculate progress from 0 (start) to 1 (end)
+                    const progress = 1 - (rect.top - scrollStart) / scrollHeight;
+                    const fadeProgress = Math.min(1, Math.max(0, progress));
+
+                    // Fade out Headline
+                    const introLayer = document.getElementById('intro-title-layer');
+                    if (introLayer) introLayer.style.opacity = 1 - fadeProgress;
+
+                    // Load Pie Chart container once and fade it in
+                    if (currentStep === 0) {
+                        updateVisual(1, true); // Load Step 1 visual content once, without setting active
+                        const visualEl = visualContent.querySelector('.visual-element');
+                        if (visualEl) visualEl.style.opacity = fadeProgress;
+                    } else if (currentStep === 1) {
+                        const visualEl = visualContent.querySelector('.visual-element');
+                        if (visualEl) visualEl.style.opacity = 1; // Ensure full opacity once passed transition
+                    }
+
+                } else if (rect.top < scrollStart) {
+                    // Ensure fully faded out if we scrolled past the transition
+                    const introLayer = document.getElementById('intro-title-layer');
+                    if (introLayer) introLayer.style.opacity = 0;
+
+                    if (currentStep === 1) {
+                        const visualEl = visualContent.querySelector('.visual-element');
+                        if (visualEl) visualEl.style.opacity = 1;
+                    }
+
+                } else if (rect.top > scrollEnd && currentStep !== 0) {
+                    // Reset if scrolling back up past the transition zone
+                    updateVisual(0);
+                    const introLayer = document.getElementById('intro-title-layer');
+                    if (introLayer) introLayer.style.opacity = 1;
+                }
+            }
+
+
+            // ------------------------------------
+            // 2. Standard Step Logic (for Steps 1+)
+            // ------------------------------------
+            steps.forEach((stepEl) => {
+                const rect = stepEl.getBoundingClientRect();
+                const stepNumber = parseInt(stepEl.getAttribute('data-step'));
+
+                // Handle Narrative Box Activity (Fade In/Out)
+                const textBox = stepEl.querySelector('.narrative-box');
+                if (textBox) {
+                    if (rect.top <= window.innerHeight * 0.9 && rect.bottom >= window.innerHeight * 0.1) {
+                        textBox.classList.add('active');
+                    } else {
+                        textBox.classList.remove('active');
+                    }
+                }
+
+                // Determine the currently active step for the visual
+                if (stepNumber && rect.top <= scrollThreshold && rect.bottom >= scrollThreshold) {
+                    activeStep = stepNumber;
+                }
+            });
+
+            // Update the visual only if the step has changed and we are past the cross-fade zone (i.e., step > 1)
+            if (activeStep > 1 && activeStep !== currentStep) {
+                updateVisual(activeStep);
+            }
+            // Special case for ending the cross-fade cleanly
+            if (activeStep === 1 && currentStep !== 1 && step1El.getBoundingClientRect().top < scrollThreshold) {
+                updateVisual(1);
+            }
+        }
+
+        // Initialize and attach listener
+        window.addEventListener('scroll', handleScroll);
+        // Run on load to set the initial state (Step 0)
+        updateVisual(0); 
+    </script>
+
+</body>
+
+</html>

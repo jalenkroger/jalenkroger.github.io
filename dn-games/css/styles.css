@@ -1,0 +1,322 @@
+:root {
+    /* DN Brand Colors */
+    --color-scarlet: #D00000;
+    --color-cream: #FDF5E6;
+    --color-white: #FFFFFF;
+    --color-black: #111111;
+    --color-gray-dark: #333333;
+    --color-gray-light: #F4F4F4;
+    --color-border: #E0E0E0;
+
+    /* Game Accents */
+    --color-gold: #C5B358;
+    /* Muted gold for elegance */
+    --color-green: #006400;
+    /* Darker, richer felt green */
+    --color-win: #28a745;
+    --color-loss: #dc3545;
+
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 4rem;
+
+    /* Borders */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-white);
+    color: var(--color-black);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    color: var(--color-black);
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Utilities */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.btn {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background-color: var(--color-scarlet);
+    color: var(--color-white);
+    border-color: var(--color-scarlet);
+}
+
+.btn-primary:hover {
+    background-color: #a00000;
+}
+
+.btn-gold {
+    background-color: var(--color-gold);
+    color: var(--color-white);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border-color: var(--color-black);
+    color: var(--color-black);
+}
+
+.btn-outline:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-1 {
+    margin-top: var(--spacing-md);
+}
+
+.mt-2 {
+    margin-top: var(--spacing-lg);
+}
+
+.mb-1 {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Header - Newspaper Style */
+header {
+    background-color: var(--color-white);
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--color-scarlet);
+    letter-spacing: -0.5px;
+}
+
+header .logo a:hover {
+    text-decoration: none;
+}
+
+.bankroll-display {
+    background: var(--color-gray-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-weight: bold;
+    color: var(--color-black);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.bankroll-display::before {
+    content: 'BALANCE:';
+    font-size: 0.7rem;
+    color: #666;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Game Grid */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
+}
+
+.game-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-scarlet);
+}
+
+.game-card-img {
+    height: 200px;
+    background-color: var(--color-gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--color-gray-dark);
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.3s;
+}
+
+.game-card:hover .game-card-img {
+    background-color: #fff0f0;
+    /* Light scarlet tint */
+    color: var(--color-scarlet);
+}
+
+.game-card-content {
+    padding: var(--spacing-lg);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-card h3 {
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.5rem;
+    color: var(--color-black);
+}
+
+.game-card p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: var(--spacing-lg);
+    flex-grow: 1;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-gray-light);
+    color: #666;
+    margin-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+}
+
+/* Confetti Canvas */
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}

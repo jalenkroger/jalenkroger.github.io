@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack | Daily Nebraskan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .game-table {
+            background-color: var(--color-green);
+            border: 12px solid #5d4037;
+            border-radius: 50px;
+            padding: var(--spacing-xl) var(--spacing-md);
+            min-height: 500px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hand-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+            min-height: 160px;
+            width: 100%;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: -40px;
+            /* Overlap cards */
+            justify-content: center;
+            height: 120px;
+        }
+
+        .card {
+            width: 80px;
+            height: 120px;
+            background-color: white;
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: var(--spacing-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            user-select: none;
+            transition: transform 0.3s ease;
+            margin-right: -30px;
+            /* Overlap */
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) rotate(-2deg);
+            z-index: 10;
+        }
+
+        .card.red {
+            color: var(--color-scarlet);
+        }
+
+        .card.black {
+            color: var(--color-black);
+        }
+
+        .card-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+        }
+
+        .card-back {
+            background: repeating-linear-gradient(45deg,
+                    #b00,
+                    #b00 10px,
+                    #900 10px,
+                    #900 20px);
+            border: 2px solid white;
+        }
+
+        .card-back * {
+            display: none;
+        }
+
+        .score-display {
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+
+        .controls-area {
+            background-color: var(--color-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-md);
+        }
+
+        .betting-controls {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .bet-input {
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border: 1px solid #ccc;
+            width: 100px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        #message-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            z-index: 20;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--color-scarlet);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #message-text {
+            color: var(--color-black);
+            margin-bottom: 0;
+            font-size: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html">DAILY NEBRASKAN</a></div>
+                <div class="bankroll-display" id="bankroll-display">$0</div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-2">
+        <div class="text-center mb-1">
+            <span class="section-label">Card Games</span>
+            <h1>Blackjack</h1>
+        </div>
+
+        <div class="game-table">
+            <div id="message-area">
+                <h2 id="message-text">You Win!</h2>
+            </div>
+
+            <!-- Dealer Hand -->
+            <div class="hand-area" id="dealer-area">
+                <div class="score-display">Dealer: <span id="dealer-score">0</span></div>
+                <div class="cards-container" id="dealer-cards">
+                    <!-- Cards go here -->
+                </div>
+            </div>
+
+            <!-- Player Hand -->
+            <div class="hand-area" id="player-area">
+                <div class="score-display">Player: <span id="player-score">0</span></div>
+                <div class="cards-container" id="player-cards">
+                    <!-- Cards go here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-area">
+            <div class="betting-controls" id="betting-controls">
+                <label style="font-weight: bold;">WAGER:</label>
+                <input type="number" id="bet-amount" class="bet-input" value="10" min="10" step="10">
+                <button id="btn-deal" class="btn btn-primary">DEAL CARDS</button>
+            </div>
+
+            <div class="action-controls hidden" id="action-controls">
+                <button id="btn-hit" class="btn btn-gold" style="color: #000;">HIT</button>
+                <button id="btn-stand" class="btn btn-primary">STAND</button>
+                <button id="btn-double" class="btn btn-outline">DOUBLE</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/deck.js"></script>
+    <script src="js/confetti.js"></script>
+    <script src="js/games/blackjack.js"></script>
+
+    <script>
+        // Hook into game end to trigger confetti
+        const originalEndRound = BlackjackGame.prototype.endRound;
+        BlackjackGame.prototype.endRound = function (result) {
+            originalEndRound.call(this, result);
+            if (result === 'win' || result === 'dealer_bust') {
+                window.confetti.explode(window.innerWidth / 2, window.innerHeight / 2);
+            }
+        };
+    </script>
+</body>
+
+</html>

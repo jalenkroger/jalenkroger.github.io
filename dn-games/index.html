@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games | Daily Nebraskan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .hero {
+            padding: var(--spacing-xl) 0;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: var(--color-scarlet);
+            font-weight: bold;
+            margin-bottom: var(--spacing-sm);
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">DAILY NEBRASKAN</div>
+                <div class="bankroll-display" id="bankroll-display">$0</div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero text-center">
+            <span class="section-label">Interactive</span>
+            <h1>The Games Section</h1>
+            <p class="mt-1">Take a break from the news. Test your luck and skill with our collection of classic casino
+                games and sports simulations.</p>
+            <button id="reset-bankroll" class="btn btn-outline mt-1" style="font-size: 0.8rem;">Reset Bankroll</button>
+        </section>
+
+        <section class="game-grid">
+            <!-- Blackjack -->
+            <div class="game-card">
+                <div class="game-card-img">♠️</div>
+                <div class="game-card-content">
+                    <h3>Blackjack</h3>
+                    <p>The classic game of 21. Beat the dealer without going bust.</p>
+                    <a href="blackjack.html" class="btn btn-primary">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Video Poker -->
+            <div class="game-card">
+                <div class="game-card-img">🃏</div>
+                <div class="game-card-content">
+                    <h3>Video Poker</h3>
+                    <p>Build the best hand. Jacks or Better to win.</p>
+                    <a href="poker.html" class="btn btn-primary">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Roulette -->
+            <div class="game-card">
+                <div class="game-card-img">🎡</div>
+                <div class="game-card-content">
+                    <h3>Roulette</h3>
+                    <p>Spin the wheel. Bet on your lucky numbers.</p>
+                    <a href="roulette.html" class="btn btn-primary">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Slots -->
+            <div class="game-card">
+                <div class="game-card-img">🎰</div>
+                <div class="game-card-content">
+                    <h3>Slots</h3>
+                    <p>Spin the reels. Match symbols for the jackpot.</p>
+                    <a href="slots.html" class="btn btn-primary">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Sports Book -->
+            <div class="game-card">
+                <div class="game-card-img">🏈</div>
+                <div class="game-card-content">
+                    <h3>Sports Book</h3>
+                    <p>Simulated betting on your favorite college and pro teams.</p>
+                    <a href="sportsbook.html" class="btn btn-primary">Play Now</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Daily Nebraskan. <br>For entertainment purposes only. No real money involved.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

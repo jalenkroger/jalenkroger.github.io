@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Poker | Daily Nebraskan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .game-container {
+            background-color: #2c3e50;
+            border: 4px solid #34495e;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .paytable {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            font-family: 'Inter', monospace;
+            color: #ecf0f1;
+            font-size: 0.9rem;
+        }
+
+        .paytable-row {
+            display: contents;
+        }
+
+        .paytable-row span {
+            padding: 2px 8px;
+        }
+
+        .paytable-row.active {
+            color: var(--color-gold);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        .cards-area {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .card {
+            width: 100px;
+            height: 150px;
+            background-color: white;
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: var(--spacing-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card.red {
+            color: var(--color-scarlet);
+        }
+
+        .card.black {
+            color: var(--color-black);
+        }
+
+        .card-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+        }
+
+        .card-back {
+            background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 10px, #34495e 10px, #34495e 20px);
+            border: 2px solid white;
+        }
+
+        .card-back * {
+            display: none;
+        }
+
+        .btn-hold {
+            background: rgba(0, 0, 0, 0.3);
+            color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-hold:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-hold.held {
+            background: var(--color-gold);
+            color: var(--color-black);
+            border-color: var(--color-gold);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(197, 179, 88, 0.5);
+        }
+
+        .controls {
+            margin-top: auto;
+            display: flex;
+            gap: var(--spacing-lg);
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .message-display {
+            font-size: 1.5rem;
+            color: var(--color-white);
+            height: 2rem;
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+            font-family: var(--font-heading);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html">DAILY NEBRASKAN</a></div>
+                <div class="bankroll-display" id="bankroll-display">$0</div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-2">
+        <div class="text-center mb-1">
+            <span class="section-label">Card Games</span>
+            <h1>Video Poker</h1>
+        </div>
+
+        <div class="game-container mt-1">
+            <div class="paytable" id="paytable">
+                <!-- Generated by JS -->
+            </div>
+
+            <div class="message-display" id="message-display">Press Deal to Start</div>
+
+            <div class="cards-area" id="cards-area">
+                <!-- 5 Cards -->
+            </div>
+
+            <div class="controls">
+                <div class="bet-control" style="color: white;">
+                    <label>BET:</label>
+                    <input type="number" id="bet-amount" value="5" min="1" max="5" class="bet-input"
+                        style="width: 60px; padding: 5px; border-radius: 4px; border: none; text-align: center;">
+                </div>
+                <button id="btn-deal" class="btn btn-primary btn-lg" style="min-width: 120px;">DEAL</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/deck.js"></script>
+    <script src="js/confetti.js"></script>
+    <script src="js/games/poker.js"></script>
+
+    <script>
+        // Hook into draw to trigger confetti on win
+        const originalDraw = VideoPoker.prototype.draw;
+        VideoPoker.prototype.draw = function() {
+            // We need to capture the result, but the original method doesn't return it easily without modification.
+            // Instead, we'll wrap the evaluateHand or just check the message content after a slight delay.
+            // Or better, modify the class method in the file. But since I can't easily modify the class file without a full rewrite,
+            // I'll use a MutationObserver on the message element? No, that's overkill.
+            // I'll just copy the logic here since I'm "Refining Game UIs" and I can overwrite the file if needed.
+            // Actually, I'll just overwrite the file in the next step if I need deep integration.
+            // For now, let's just use the fact that I'm rewriting the HTML.
+            
+            // Let's just monkey patch the method properly.
+            const oldDraw = originalDraw.bind(this);
+            // Wait, `this` context issues.
+            // Easier: I will just update poker.js in the next tool call to include confetti.
+            oldDraw();
+            
+            // Check if we won by looking at the message text
+            const msg = document.getElementById('message-display').textContent;
+            if (msg.includes('You won')) {
+                window.confetti.explode(window.innerWidth / 2, window.innerHeight / 2);
+            }
+        };
+        // Re-bind the button because the class constructor already bound it to the old method?
+        // Yes, the constructor bound `this.deal` or `this.handleAction`.
+        // `handleAction` calls `draw`. So overriding prototype `draw` works if it's called dynamically.
+        // It is called as `this.draw()`. So yes.
+    </script>
+</body>
+
+</html>

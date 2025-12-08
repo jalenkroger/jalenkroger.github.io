@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette | Daily Nebraskan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .game-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        /* Wheel Styles */
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: var(--spacing-md) auto;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#059348 0deg 9.7deg,
+                    #D00000 9.7deg 19.4deg,
+                    #1A1A1A 19.4deg 29.1deg,
+                    #D00000 29.1deg 38.8deg,
+                    #1A1A1A 38.8deg 48.5deg,
+                    #D00000 48.5deg 58.2deg,
+                    #1A1A1A 58.2deg 67.9deg,
+                    #D00000 67.9deg 77.6deg,
+                    #1A1A1A 77.6deg 87.3deg,
+                    #D00000 87.3deg 97deg,
+                    #1A1A1A 97deg 106.7deg,
+                    #D00000 106.7deg 116.4deg,
+                    #1A1A1A 116.4deg 126.1deg,
+                    #D00000 126.1deg 135.8deg,
+                    #1A1A1A 135.8deg 145.5deg,
+                    #D00000 145.5deg 155.2deg,
+                    #1A1A1A 155.2deg 164.9deg,
+                    #D00000 164.9deg 174.6deg,
+                    #1A1A1A 174.6deg 184.3deg,
+                    #D00000 184.3deg 194deg,
+                    #1A1A1A 194deg 203.7deg,
+                    #D00000 203.7deg 213.4deg,
+                    #1A1A1A 213.4deg 223.1deg,
+                    #D00000 223.1deg 232.8deg,
+                    #1A1A1A 232.8deg 242.5deg,
+                    #D00000 242.5deg 252.2deg,
+                    #1A1A1A 252.2deg 261.9deg,
+                    #D00000 261.9deg 271.6deg,
+                    #1A1A1A 271.6deg 281.3deg,
+                    #D00000 281.3deg 291deg,
+                    #1A1A1A 291deg 300.7deg,
+                    #D00000 300.7deg 310.4deg,
+                    #1A1A1A 310.4deg 320.1deg,
+                    #D00000 320.1deg 329.8deg,
+                    #1A1A1A 329.8deg 339.5deg,
+                    #D00000 339.5deg 349.2deg,
+                    #1A1A1A 349.2deg 360deg);
+            border: 10px solid #2c3e50;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            border: 4px solid #ddd;
+        }
+
+        .marker {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #2c3e50;
+            z-index: 3;
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .result-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--color-gold);
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Betting Board */
+        .betting-board {
+            display: grid;
+            grid-template-columns: 50px repeat(3, 1fr);
+            gap: 2px;
+            background: #059348;
+            padding: var(--spacing-md);
+            border: 1px solid #047a3b;
+            border-radius: var(--radius-md);
+            max-width: 800px;
+            width: 100%;
+            box-shadow: var(--shadow-md);
+        }
+
+        .bet-cell {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .bet-cell:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .bet-cell.red {
+            background-color: var(--color-scarlet);
+        }
+
+        .bet-cell.black {
+            background-color: var(--color-black);
+        }
+
+        .bet-cell.zero {
+            grid-row: span 12;
+            background-color: transparent;
+        }
+
+        .chip {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            border: 3px dashed #fff;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+            animation: popIn 0.2s ease-out;
+        }
+
+        .controls {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+            background: var(--color-white);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .bet-info {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html">DAILY NEBRASKAN</a></div>
+                <div class="bankroll-display" id="bankroll-display">$0</div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-2">
+        <div class="text-center mb-1">
+            <span class="section-label">Table Games</span>
+            <h1>Roulette</h1>
+        </div>
+
+        <div class="game-layout">
+            <div class="wheel-container">
+                <div class="marker"></div>
+                <div class="wheel" id="wheel"></div>
+                <div class="wheel-center">DN</div>
+                <div class="result-display" id="result-display">0</div>
+            </div>
+
+            <div class="betting-board" id="betting-board">
+                <!-- 0 -->
+                <div class="bet-cell zero" data-number="0">0</div>
+                <!-- Numbers 1-36 generated by JS -->
+            </div>
+
+            <div class="controls">
+                <div class="bet-selector">
+                    <label>CHIP:</label>
+                    <select id="chip-value" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                        <option value="1">$1</option>
+                        <option value="5">$5</option>
+                        <option value="10" selected>$10</option>
+                        <option value="25">$25</option>
+                        <option value="100">$100</option>
+                    </select>
+                </div>
+                <button id="btn-spin" class="btn btn-primary btn-lg">SPIN WHEEL</button>
+                <button id="btn-clear" class="btn btn-outline">Clear Bets</button>
+                <div class="bet-info">Total Bet: $<span id="total-bet">0</span></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/confetti.js"></script>
+    <script src="js/games/roulette.js"></script>
+
+    <script>
+        // Hook into resolveSpin for confetti
+        const originalResolve = RouletteGame.prototype.resolveSpin;
+        RouletteGame.prototype.resolveSpin = function (result) {
+            originalResolve.call(this, result);
+            // Check if user won something (winnings > 0)
+            // The original method alerts, so we might want to suppress alert or just add confetti before it.
+            // Actually, the alert happens in a setTimeout.
+            // We can check if any bet matched.
+
+            // Let's just check if there's a win message? 
+            // The original code uses `alert`. That's blocking.
+            // We should probably replace the alert with a nice DOM message in a future iteration,
+            // but for now let's just fire confetti if there's a win.
+
+            // We can re-calculate win here to be sure, or just fire it.
+            // Or better: The original code calls `window.bankroll.transaction(winnings)`.
+            // We can hook into bankroll transaction? No, that happens for losses too (negative).
+            // But winnings is positive.
+
+            // Let's just fire confetti if the result is a number that has a chip on it?
+            // Too complex to reverse engineer state here.
+            // I'll just fire confetti every time for now? No.
+
+            // I'll rely on the `alert` in the original code for feedback, 
+            // but maybe I can monkey-patch `alert`?
+            const oldAlert = window.alert;
+            window.alert = function (msg) {
+                if (msg.includes('won')) {
+                    window.confetti.explode(window.innerWidth / 2, window.innerHeight / 2);
+                }
+                oldAlert(msg);
+                window.alert = oldAlert; // Restore
+            };
+        };
+    </script>
+</body>
+
+</html>

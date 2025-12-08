@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Book | Daily Nebraskan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .sports-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: var(--spacing-lg);
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .sports-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .games-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .match-card {
+            background: var(--color-white);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .teams {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .sport-label {
+            font-size: 0.75rem;
+            color: var(--color-scarlet);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .team {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--color-black);
+        }
+
+        .odds-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .btn-odds {
+            background: var(--color-gray-light);
+            border: 1px solid #ddd;
+            color: var(--color-black);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            width: 110px;
+            text-align: center;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .btn-odds:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+        }
+
+        .btn-odds.selected {
+            background: var(--color-scarlet);
+            color: white;
+            border-color: var(--color-scarlet);
+        }
+
+        /* Betting Slip */
+        .bet-slip {
+            background: var(--color-white);
+            color: var(--color-black);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-sm);
+            position: sticky;
+            top: 100px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .slip-header {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--color-scarlet);
+            padding-bottom: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .selected-bet-info {
+            background: #f8f9fa;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            border: 1px solid #eee;
+        }
+
+        .stake-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: var(--spacing-md);
+            border: 1px solid #ccc;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+        }
+
+        .my-bets {
+            margin-top: var(--spacing-lg);
+            border-top: 1px solid #eee;
+            padding-top: var(--spacing-md);
+        }
+
+        .bet-history-item {
+            font-size: 0.9rem;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .bet-status {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .bet-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .bet-status.won {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .bet-status.lost {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html">DAILY NEBRASKAN</a></div>
+                <div class="bankroll-display" id="bankroll-display">$0</div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mt-2">
+        <div class="text-center mb-1">
+            <span class="section-label">Simulation</span>
+            <h1>Sports Book</h1>
+            <p style="color: #666;">Mock odds for entertainment only.</p>
+        </div>
+
+        <div class="sports-layout">
+            <div class="games-list" id="games-list">
+                <!-- Games injected by JS -->
+            </div>
+
+            <aside class="bet-slip">
+                <div class="slip-header">Bet Slip</div>
+
+                <div id="empty-slip-msg" style="color: #888; font-style: italic;">Select a wager to start.</div>
+
+                <div id="active-slip" style="display: none;">
+                    <div class="selected-bet-info">
+                        <div id="slip-match" style="font-size: 0.9rem; color: #666;">Team A vs Team B</div>
+                        <div id="slip-selection"
+                            style="font-weight: bold; color: var(--color-scarlet); font-size: 1.1rem; margin-top: 4px;">
+                            Team A @ +150</div>
+                    </div>
+
+                    <label style="font-weight: bold; font-size: 0.9rem;">STAKE:</label>
+                    <input type="number" id="stake-input" class="stake-input" value="10" min="1">
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem;">
+                        <span>Potential Win:</span>
+                        <span id="potential-win" style="font-weight: bold; color: var(--color-green);">$0</span>
+                    </div>
+
+                    <button id="btn-place-bet" class="btn btn-primary" style="width: 100%;">PLACE BET</button>
+                </div>
+
+                <div class="my-bets">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px;">My Bets</h3>
+                    <div id="bet-history">
+                        <!-- History -->
+                    </div>
+                    <button id="btn-simulate" class="btn btn-outline mt-1"
+                        style="width: 100%; font-size: 0.8rem;">SIMULATE RESULTS</button>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/confetti.js"></script>
+    <script src="js/games/sportsbook.js"></script>
+
+    <script>
+        // Hook into simulateResults for confetti
+        const originalSimulate = SportsBook.prototype.simulateResults;
+        SportsBook.prototype.simulateResults = function() {
+            // We need to know if there was a win.
+            // The original method alerts.
+            const oldAlert = window.alert;
+            window.alert = function(msg) {
+                if (msg.includes('won')) {
+                    window.confetti.explode(window.innerWidth / 2, window.innerHeight / 2);
+                }
+                oldAlert(msg);
+                window.alert = oldAlert;
+            };
+            originalSimulate.call(this);
+        };
+    </script>
+</body>
+
+</html>

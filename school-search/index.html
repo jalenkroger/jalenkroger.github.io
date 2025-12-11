@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your District's Chronic Absentee Rate</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+    <main class="container">
+        <header class="header">
+            <h1>Find your district's chronic absentee rate</h1>
+            <p class="subtitle">Search for a Nebraska school district to see the trends in chronic absenteeism over recent years.</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-wrapper">
+                <input type="text" id="districtSearch" placeholder="Type a district name..." autocomplete="off">
+                <div id="suggestions" class="suggestions-list hidden"></div>
+            </div>
+        </div>
+
+        <div id="resultSection" class="result-section hidden">
+            <h2 id="districtNameDisplay"></h2>
+            <div class="chart-container">
+                <canvas id="absenteeChart"></canvas>
+            </div>
+            <div class="data-summary" id="dataSummary">
+                <!-- Fallback text or summary stats could go here -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Data source: Nebraska Department of Education</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

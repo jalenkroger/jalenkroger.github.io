@@ -1,0 +1,299 @@
+:root {
+    --wu-yellow: #FFD700;
+    --wu-gold: #CCAA00;
+    --wu-black: #0c0c0c;
+    --bg-dark: #121212;
+    --text-light: #fdfdfd;
+    --text-muted: #b0b0b0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: 'Oswald', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+    /* Gritty texture pattern using CSS */
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.4) 0%, rgba(0, 0, 0, 1) 100%),
+        repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px);
+}
+
+/* Iconic W background shape using CSS clip-path to simulate the logo */
+.bg-w-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background-color: rgba(255, 215, 0, 0.05);
+    clip-path: polygon(10% 0, 30% 0, 40% 60%, 50% 20%, 60% 60%, 70% 0, 90% 0,
+            75% 100%, 50% 40%, 25% 100%);
+    z-index: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.1));
+}
+
+.container {
+    background: rgba(12, 12, 12, 0.85);
+    backdrop-filter: blur(8px);
+    border: 3px solid var(--wu-yellow);
+    padding: 3.5rem;
+    max-width: 650px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(255, 215, 0, 0.2),
+        inset 0 0 20px rgba(0, 0, 0, 0.8);
+    position: relative;
+    z-index: 10;
+    border-radius: 4px;
+    /* Harder edges for a tough look */
+    /* Add a gritty texture overlay inside the container */
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.05"/></svg>');
+}
+
+/* Diagonal warning tape effect */
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: repeating-linear-gradient(-45deg,
+            var(--wu-black),
+            var(--wu-black) 10px,
+            var(--wu-yellow) 10px,
+            var(--wu-yellow) 20px);
+}
+
+.container::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: repeating-linear-gradient(-45deg,
+            var(--wu-black),
+            var(--wu-black) 10px,
+            var(--wu-yellow) 10px,
+            var(--wu-yellow) 20px);
+}
+
+
+header h1 {
+    font-size: 3.5rem;
+    color: var(--wu-yellow);
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-shadow: 4px 4px 0px var(--wu-black),
+        6px 6px 15px rgba(255, 215, 0, 0.4);
+    line-height: 1.1;
+}
+
+header p {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    padding-bottom: 1rem;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1.4rem;
+    background: #000;
+    border: 2px solid var(--wu-yellow);
+    color: var(--text-light);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.2);
+    background: #111;
+}
+
+input[type="text"]::placeholder {
+    color: #555;
+}
+
+input[type="text"].error {
+    border-color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.1);
+    animation: shake 0.4s;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    50% {
+        transform: translateX(8px);
+    }
+
+    75% {
+        transform: translateX(-8px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+button {
+    background-color: var(--wu-yellow);
+    color: var(--wu-black);
+    border: none;
+    padding: 1.2rem 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 2px;
+    box-shadow: 4px 4px 0px #000;
+}
+
+button:hover {
+    background-color: #ffe600;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000, 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #000;
+}
+
+.result-section {
+    opacity: 1;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: scale(1);
+    margin-top: 2rem;
+    position: relative;
+    padding: 2.5rem 1rem;
+    background: #000;
+    border: 1px solid var(--wu-gold);
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.result-section.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+    position: absolute;
+    visibility: hidden;
+}
+
+.result-section p {
+    color: var(--wu-yellow);
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.wu-name {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 4rem;
+    color: var(--wu-yellow);
+    line-height: 1.1;
+    text-shadow:
+        3px 3px 0px var(--wu-black),
+        -2px -2px 0px var(--wu-black),
+        2px -2px 0px var(--wu-black),
+        -2px 2px 0px var(--wu-black),
+        4px 4px 10px rgba(0, 0, 0, 0.9);
+    position: relative;
+    z-index: 2;
+    transform: rotate(-2deg);
+    /* Slightly off-kilter for the gritty street look */
+}
+
+/* The Poop variation specific styling */
+.poop-variant {
+    color: #8D6E63 !important;
+    text-shadow:
+        3px 3px 0px var(--wu-black),
+        -2px -2px 0px var(--wu-black),
+        2px -2px 0px var(--wu-black),
+        -2px 2px 0px var(--wu-black),
+        0 0 25px rgba(93, 64, 55, 0.8) !important;
+    transform: rotate(1deg);
+    /* Different angle */
+}
+
+.logo-accent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18rem;
+    color: rgba(255, 215, 0, 0.08);
+    z-index: 1;
+    pointer-events: none;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 2.5rem;
+    }
+
+    .wu-name {
+        font-size: 2.8rem;
+    }
+
+    .container {
+        padding: 2rem;
+    }
+
+    .bg-w-logo {
+        width: 300px;
+        height: 300px;
+    }
+}

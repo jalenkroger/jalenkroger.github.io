@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Enter the 36 Chambers and get your Wu-Tang Clan name.">
+    <title>Wu-Tang Name Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wu-Tang Name Generator</h1>
+            <p>Enter your earthly name to discover your Shaolin identity.</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <input type="text" id="nameInput" placeholder="Enter your full name" autocomplete="off">
+                <button id="generateBtn">Bring the Ruckus</button>
+            </div>
+
+            <div class="result-section hidden" id="resultSection">
+                <p>Your Wu-Tang Name is:</p>
+                <h2 id="wuName" class="wu-name"></h2>
+                <div class="logo-accent">W</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

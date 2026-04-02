@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology - The Budget Paradox</title>
+<style>
+    :root {
+        --text-color: #1a1a1a;
+        --bg-color: #ffffff;
+        --link-color: #0056b3;
+        --border-color: #e2e8f0;
+    }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background: var(--bg-color);
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px;
+    }
+    h1, h2, h3 {
+        color: #000;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+    }
+    h1 {
+        font-size: 2.2em;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+    }
+    h2 {
+        font-size: 1.5em;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+        margin-top: 2em;
+    }
+    a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    strong {
+        font-weight: 600;
+    }
+    ul, ol {
+        padding-left: 20px;
+        margin-bottom: 1em;
+    }
+    li {
+        margin-bottom: 0.5em;
+    }
+    code {
+        font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        background: #f1f5f9;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-size: 0.9em;
+    }
+    blockquote {
+        margin: 1.5em 0;
+        padding: 1em 1.5em;
+        border-left: 4px solid #cbd5e1;
+        background: #f8fafc;
+        font-style: italic;
+        border-radius: 0 4px 4px 0;
+    }
+    
+    @media print {
+        body {
+            max-width: none;
+            padding: 0;
+            font-size: 12pt;
+        }
+        h2 {
+            page-break-after: avoid;
+        }
+        ul, ol, blockquote {
+            page-break-inside: avoid;
+        }
+        a {
+            text-decoration: underline;
+        }
+        @page {
+            margin: 1in;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1>The Budget Paradox: Methodology & Data Collection</h1>
+
+<p>This document outlines the step-by-step methodology used to investigate, calculate, and implement the data visualizations for the "The Budget Paradox" project regarding the University of Nebraska and President Jeffery Gold.</p>
+
+<h2>Step 1: Establishing the Salary Disparity and Growth Baseline</h2>
+<p><strong>Focus:</strong> "The Cost of Leadership"</p>
+
+<ul>
+    <li><strong>Data Sources:</strong>
+        <ul>
+            <li><a href="https://nebraskapublicmedia.org/en/news/">Nebraska Public Media (Historical compensation reporting)</a></li>
+            <li><a href="https://nebraska.edu/board/operating-budgets">NU Board of Regents Operating Budgets</a></li>
+            <li><a href="https://data.bls.gov/cgi-bin/cpicalc.pl">U.S. Bureau of Labor Statistics (BLS) CPI Inflation Calculator</a></li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Process:</strong></p>
+<ol>
+    <li>We identified a logical baseline year (2000) for historical comparison. In 2000, the baseline university president salary was approximately $250,000, and the average faculty baseline was $68,000.</li>
+    <li>We calculated the cumulative inflation from 2000 to 2024 using the standard BLS CPI calculator, which yielded an inflation rate of roughly <strong>72%</strong>.</li>
+    <li>We projected what those salaries <em>should</em> be today if they simply matched inflation: $430,000 (President) and $118,000 (Faculty).</li>
+    <li>We pulled the 2024 actuals: Jeffery Gold's base package of <strong>$1,062,573</strong> and the current average faculty salary of <strong>$108,712</strong>.</li>
+    <li><strong>Implementation in Code:</strong> This data was translated into the <code>index.html</code> structure under the <code>#executive-cost</code> section. In <code>script.js</code>, we built the <code>salary-intro</code>, <code>salary-inflation</code>, and <code>salary-compare</code> scroll events to dynamically resize the height of the CSS pillars (representing salary) out of a defined <code>$1.5M</code> max scale, showcasing how the presidential salary outpaced inflation by 2.5x while faculty lagged behind.</li>
+</ol>
+
+<h2>Step 2: Tracking the Academic Hollow-Out</h2>
+<p><strong>Focus:</strong> "The Budget Pipeline"</p>
+
+<ul>
+    <li><strong>Data Sources:</strong>
+        <ul>
+            <li><a href="https://flatwaterfreepress.org/">Flatwater Free Press investigation ("University spending on managers triples")</a></li>
+            <li><a href="https://nces.ed.gov/ipeds/">National Center for Education Statistics (NCES) IPEDS Data (2014-2024)</a></li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Process:</strong></p>
+<ol>
+    <li>We targeted institutional headcount data and spending allocations to see if the reduction in tenured faculty correlated with administrative savings.</li>
+    <li>The data indicated a distinct inversion: Over a 10-year span, real-dollar spending on NU instructional faculty dropped by <strong>10%</strong>, with full-time tenure-track positions declining.</li>
+    <li>Conversely, the university relied on non-tenured adjuncts as a budgetary stopgap, increasing their ranks by <strong>38.7%</strong>.</li>
+    <li>During this same exact period, spending and headcounts for the administrative stream swelled by <strong>54%</strong>.</li>
+    <li><strong>Implementation in Code:</strong> We created an SVG "Budget Pipeline" in <code>index.html</code>. Using <code>IntersectionObserver</code> in <code>script.js</code>, as the user scrolls, the stroke widths of the SVG paths (<code>svg-faculty</code>, <code>svg-adjunct</code>, <code>svg-admin</code>) mathematically shift to visually represent these percentage changes over time.</li>
+</ol>
+
+<h2>Step 3: Calculating The Tuition Paradox</h2>
+<p><strong>Focus:</strong> "The Tuition Paradox"</p>
+
+<ul>
+    <li><strong>Data Sources:</strong>
+        <ul>
+            <li><a href="https://nebraska.edu/board/operating-budgets">NU Board of Regents Historical Budget Reports</a></li>
+            <li><a href="https://nebraska.edu/about/tuition">Historical UNL Tuition Rates</a></li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Process:</strong></p>
+<ol>
+    <li>We analyzed the breakdown of the university's operating budget streams over the last 24 years, specifically isolating Student Tuition & Fees vs. State Appropriations.</li>
+    <li>We compared the growth of these funding streams against our established <strong>72%</strong> inflation baseline.</li>
+    <li>The findings demonstrated that while state aid effectively depreciated (falling <strong>44%</strong> below relative 2000 value), student costs surged wildly, growing <strong>200%</strong> over the same timeframe.</li>
+    <li><strong>Implementation in Code:</strong> This was formulated as a divergence chart using an SVG coordinate system. The x-axis represents time, while the y-axis represents the percentage change. In <code>script.js</code>, as the user reaches the step, the state aid line plunges below the inflation baseline, creating an illuminated "dead zone" (shaded via an SVG path in <code>index.html</code>) that cleanly illustrates the financial gap students are now forced to cover.</li>
+</ol>
+
+<h2>Step 4: Benchmarking Against Institutional Peers</h2>
+<p><strong>Focus:</strong> "The Peer Comparison"</p>
+
+<ul>
+    <li><strong>Data Sources:</strong>
+        <ul>
+            <li><a href="https://nces.ed.gov/ipeds/">IPEDS 2023 Data (4-Year Cohort Graduation Rates)</a></li>
+            <li><a href="https://nces.ed.gov/">Public University Compensation/Fiscal Records (Institutional Peer Universities)</a></li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Process:</strong></p>
+<ol>
+    <li>High administrative costs are frequently justified by institutions as an "investment in student success." We set out to test this hypothesis among institutional peers.</li>
+    <li>We cataloged base executive compensations for peer universities (e.g., Ohio State, Illinois, Indiana) and mapped them directly against their official IPEDS 4-year graduation rates.</li>
+    <li>We found a glaring efficiency gap: while universities like Illinois pay high salaries ($950K) but yield high outcomes (71% grad rate), the University of Nebraska pays a premium executive compensation ($1.06M) but yields a comparatively poor outcome (<strong>46% grad rate</strong>)—the lowest among the sampled peers.</li>
+    <li><strong>Implementation in Code:</strong> An array of objects <code>peerData</code> was established in <code>script.js</code> containing each university's compensation and graduation rate. A loop injects HTML bars matching these percentages into the DOM. Two different scrollytelling triggers (<code>peer-intro</code> and <code>peer-efficiency</code>) animate the width of the bars, allowing the user to first view the raw compensation gap, and then toggle the view to see the actual graduation rate performance.</li>
+</ol>
+
+<h2>Appendix: "Vibecoding" the Application</h2>
+<p>This website was built using a "vibecoding" approach—relying on natural language prompts to dictate the design, architecture, and logic of the application to an AI agent, rather than writing traditional raw code.</p>
+
+<p>The following logical progression of prompts was used to generate the final website:</p>
+
+<ol>
+    <li><strong>The Initial Architecture & Concept:</strong>
+        <blockquote>"Investigate the university's budget paradox... transform this investigation into a compelling, multimedia journalistic website for the Daily Nebraskan, styled after their existing design system."</blockquote>
+    </li>
+    <li><strong>Iterating on Data Visualizations:</strong>
+        <blockquote>"Implement a new visual narrative for the website, replacing the previous 'Academic Hollow-Out' structural column with a more intuitive 'Budget Pipeline' SVG graphic... visually representing the shift in university funding from faculty to administration."</blockquote>
+    </li>
+    <li><strong>Refining the Aesthetics & Animations:</strong>
+        <blockquote>"Refine the three existing graphics: Fix overlapping text labels, increase the visual emphasis and height disparity between the President's and Faculty's salary pillars to make the change more drastic... ensure the SVG animations reset correctly on scroll-up."</blockquote>
+    </li>
+    <li><strong>Expanding Context & Data Logic:</strong>
+        <blockquote>"Fix the visual bug in the Cost of Leadership graphic and expand the Peer Comparison section to include administrative efficiency metrics, comparing administrative spending against outcomes like graduation rates."</blockquote>
+    </li>
+</ol>
+
+</body>
+</html>

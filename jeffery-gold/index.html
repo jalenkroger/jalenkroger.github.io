@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Budget Paradox | A Daily Nebraskan Investigation</title>
+    <!-- Premium Typography: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="dn-header">
+        <div class="header-container">
+            <div class="dn-logo">INVESTIGATION // 001</div>
+            <nav class="dn-nav">
+                <span>SYSTEM DATA</span>
+                <span>EXECUTIVE COST</span>
+                <span class="active">BUDGET PARADOX</span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="story-container">
+        <!-- Hero Section -->
+        <section class="hero-block">
+            <div class="hero-bg"></div>
+            <div class="category">THE DAILY NEBRASKAN SPECIAL PROJECT</div>
+            <h1>THE BUDGET<br>PARADOX</h1>
+            <p class="subheadline">Inside the 25-year inversion of the University of Nebraska’s fiscal identity.</p>
+            <div class="byline">
+                By <span class="author">Jalen-Thomas Kroger</span> | Investigators
+            </div>
+        </section>
+
+        <!-- Intro Text -->
+        <article class="article-body">
+            <p class="drop-cap">A</p>
+            <p>
+                In 2024, the University of Nebraska reached a tipping point that went largely unremarked in official
+                press releases. For the first time in the system’s 156-year history, it cost more to manage the
+                university than it did to teach the students.
+            </p>
+        </article>
+
+        <!-- 01. THE BUDGET PIPELINE -->
+        <section class="multimedia-breakout" id="headcount-shift">
+            <h2 class="section-trigger">01. THE ACADEMIC HOLLOW-OUT</h2>
+            <div class="scrolly-container">
+                <div class="data-vis-sticky">
+                    <div class="pipeline-container" id="budget-pipeline">
+                        <svg class="pipeline-svg" viewBox="0 0 500 600" preserveAspectRatio="xMidYMid meet">
+                            <!-- Background Guides (Optional subtle track) -->
+                            <path class="flow-track" d="M 250 60 L 250 180 L 150 280 L 150 500" />
+                            <path class="flow-track" d="M 250 60 L 250 180 L 350 280 L 350 500" />
+
+                            <!-- Branching Streams -->
+                            <path class="flow-line faculty" id="svg-faculty" d="M 250 180 L 150 280 L 150 500" />
+                            <path class="flow-line adjunct" id="svg-adjunct" d="M 250 180 L 250 280 L 250 500" />
+                            <path class="flow-line admin" id="svg-admin" d="M 250 180 L 350 280 L 350 500" />
+
+                            <!-- Total Budget (Capping the junction) -->
+                            <path class="flow-line total" d="M 250 60 L 250 180" />
+
+                            <!-- Header -->
+                            <text x="250" y="40" class="pipe-title">THE ACADEMIC HOLLOW-OUT</text>
+
+                            <!-- Labels -->
+                            <text x="150" y="540" class="pipe-label">TENURED</text>
+                            <text x="150" y="565" class="data-callout" id="data-faculty-svg">(-10%)</text>
+
+                            <text x="250" y="540" class="pipe-label">ADJUNCTS</text>
+                            <text x="250" y="565" class="data-callout highlight-gold"
+                                id="data-adjunct-svg">(+38.7%)</text>
+
+                            <text x="350" y="540" class="pipe-label">ADMIN</text>
+                            <text x="350" y="565" class="data-callout highlight" id="data-admin-svg">(+54%)</text>
+                        </svg>
+
+                        <div class="pipeline-legend">
+                            <div class="legend-item">
+                                <div class="swatch faculty-swatch"></div> Tenured
+                            </div>
+                            <div class="legend-item">
+                                <div class="swatch adjunct-swatch"></div> Adjuncts
+                            </div>
+                            <div class="legend-item">
+                                <div class="swatch admin-swatch"></div> Admin
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scrolly-text">
+                    <div class="step" data-step="pipe-intro">
+                        <h3>The Funding Flow (2014)</h3>
+                        <p>A university's core mission is teaching. For decades, the flow of operating funds heavily
+                            favored the instructional faculty who actually deliver that product.</p>
+                    </div>
+                    <div class="step" data-step="pipe-shift">
+                        <h3>The Hollow-Out (2024)</h3>
+                        <p>But the pipeline has shifted. Over the last decade, inflation-adjusted spending on NU faculty
+                            dropped by 10%. Full-time tenure-track positions declined by 8.5%.</p>
+                    </div>
+                    <div class="step" data-step="pipe-adjuncts">
+                        <h3>The Adjunct Reality</h3>
+                        <p>To keep classes running amidst these cuts, the university relies increasingly on non-tenured
+                            adjuncts (+38.7% growth)—cheap labor paid per course with no benefits or long-term security.
+                        </p>
+                    </div>
+                    <div class="step" data-step="pipe-admin">
+                        <h3>The Administrative Swell</h3>
+                        <p>The savings from hollowing out the teaching staff didn't save the system money. Instead, the
+                            administration stream swelled by 54% in real dollars over the same period.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02. THE COST OF LEADERSHIP -->
+        <section class="multimedia-breakout" id="executive-cost">
+            <h2 class="section-trigger">02. THE COST OF LEADERSHIP</h2>
+            <div class="scrolly-container">
+                <div class="data-vis-sticky">
+                    <div class="leadership-totem-container">
+                        <!-- Scale Indicators -->
+                        <div class="scale-lines">
+                            <div class="scale-line" style="bottom: 16.67%;"><span>$250K</span></div>
+                            <div class="scale-line" style="bottom: 33.33%;"><span>$500K</span></div>
+                            <div class="scale-line" style="bottom: 50%;"><span>$750K</span></div>
+                            <div class="scale-line" style="bottom: 66.67%;"><span>$1M</span></div>
+                            <div class="scale-line" style="bottom: 83.33%;"><span>$1.25M</span></div>
+                            <div class="scale-line" style="bottom: 100%;"><span>$1.5M</span></div>
+                        </div>
+
+                        <div class="comparison-grid two-pillars">
+                            <!-- Faculty -->
+                            <div class="pillar">
+                                <div class="pillar-shadow" id="faculty-inflation-shadow"></div>
+                                <div class="pillar-bar" id="pillar-faculty-dyna">
+                                    <div class="pillar-label" id="faculty-label">$68,000<br><span>(2000 Salary)</span>
+                                    </div>
+                                </div>
+                                <div class="totem-name">FACULTY</div>
+                            </div>
+
+                            <!-- President -->
+                            <div class="pillar highlight">
+                                <div class="pillar-shadow shortfall" id="president-inflation-shadow"></div>
+                                <div class="pillar-bar highlight" id="pillar-president-dyna">
+                                    <div class="pillar-label" id="president-label">$250,000<br><span>(2000
+                                            Salary)</span></div>
+                                    <div class="disparity-badge" id="president-badge">2.5x INFLATION ADJ.</div>
+                                </div>
+                                <div class="totem-name">PRESIDENT</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scrolly-text">
+                    <div class="step" data-step="salary-intro">
+                        <h3>The Year 2000 Baseline</h3>
+                        <p>In 2000, the University of Nebraska President made roughly $250,000, while the average
+                            faculty member made $68,000.</p>
+                    </div>
+                    <div class="step" data-step="salary-inflation">
+                        <h3>The Inflation Expectation</h3>
+                        <p>If those salaries simply kept pace with general inflation (72% since 2000), the President
+                            would make $430,000 today, and faculty would make $118,000.</p>
+                    </div>
+                    <div class="step" data-step="salary-compare">
+                        <h3>The 2024 Reality</h3>
+                        <p>Instead, Jeffery Gold's $1,062,573 salary marks a new era—shattering inflation expectations.
+                            Meanwhile, faculty salaries shrank against inflation, falling short at $108,712.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04. THE TUITION PARADOX -->
+        <section class="multimedia-breakout" id="divergence-section">
+            <h2 class="section-trigger">04. THE TUITION PARADOX</h2>
+            <div class="scrolly-container">
+                <div class="data-vis-sticky">
+                    <div class="divergence-chart" id="divergence-chart">
+                        <div class="heat-glow"></div>
+                        <svg viewBox="0 0 450 320" class="divergence-svg">
+                            <!-- Chart Grid & Axes -->
+                            <path d="M 60 250 L 350 250" class="chart-grid x-axis" />
+                            <path d="M 50 150 L 350 150" class="chart-grid dashed" />
+                            <path d="M 50 50 L 350 50" class="chart-grid dashed" />
+
+                            <!-- Grid Labels -->
+                            <text x="40" y="254" class="grid-label y-label">0%</text>
+                            <text x="40" y="154" class="grid-label y-label">+100%</text>
+                            <text x="40" y="54" class="grid-label y-label">+200%</text>
+                            <text x="60" y="270" class="grid-label x-label">2000</text>
+                            <text x="350" y="270" class="grid-label x-label">2024</text>
+
+                            <!-- Shaded Area for "Dead Zone" -->
+                            <path d="M 60 250 L 350 50 L 350 294 Z" class="dead-zone-area" id="dead-zone" />
+
+                            <!-- Dead Zone Label -->
+                            <text x="280" y="200" class="dead-zone-label" id="dead-zone-label">THE STUDENT GAP</text>
+
+                            <!-- Baseline Inflation Line -->
+                            <path d="M 60 250 L 350 178" class="chart-line inflation-baseline" id="line-inflation" />
+                            <!-- Tuition Line -->
+                            <path d="M 60 250 L 350 50" class="chart-line tuition" id="line-tuition" />
+                            <!-- State Aid Line -->
+                            <path d="M 60 250 L 350 294" class="chart-line state-aid" id="line-aid" />
+
+                            <!-- Animated Spark at Tip (Tuition) -->
+                            <circle cx="350" cy="50" r="4" class="line-spark tuition-spark" id="tuition-spark" />
+
+                            <!-- Main Data Labels -->
+                            <text x="360" y="45" class="chart-label tuition">TUITION<tspan x="360" dy="12">(+200%)
+                                </tspan></text>
+                            <text x="360" y="173" class="chart-label inflation">INFLATION<tspan x="360" dy="12">(+72%)
+                                </tspan></text>
+                            <text x="360" y="295" class="chart-label state-aid">STATE AID<tspan x="360" dy="12">(-44%)
+                                </tspan></text>
+                        </svg>
+                    </div>
+                </div>
+                <div class="scrolly-text">
+                    <div class="step" data-step="tuition-start">
+                        <h3>The Inflated Burden</h3>
+                        <p>UNL tuition hasn't just grown; it has outpaced the economy. Compared to the 72% rise in
+                            general
+                            inflation, student costs have surged by 200%.</p>
+                    </div>
+                    <div class="step" data-step="aid-drop">
+                        <h3>The Fiscal Dead Zone</h3>
+                        <p>While students pay more, state aid falls below the 2000 dollar value. This gap—the shaded
+                            area
+                            below—represents the "Budget Paradox" students are asked to solve.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05. THE PEER COMPARISON -->
+        <section class="multimedia-breakout" id="peer-comparison">
+            <h2 class="section-trigger">05. THE PEER COMPARISON</h2>
+            <div class="scrolly-container">
+                <div class="data-vis-sticky">
+                    <div class="bar-chart-container" id="peer-chart">
+                        <!-- Bars injected via JS -->
+                    </div>
+                </div>
+                <div class="scrolly-text">
+                    <div class="step" data-step="peer-intro">
+                        <h3>A System Out of Balance</h3>
+                        <p>Compared to its institutional peers, the University of Nebraska's administrative growth
+                            stands out. While precise accounting definitions vary by state, Nebraska consistently
+                            allocates a higher proportion of its budget to institutional administration than nearly all
+                            of its peers.</p>
+                    </div>
+                    <div class="step" data-step="peer-efficiency">
+                        <h3>The Efficiency Gap</h3>
+                        <p>High administrative costs are often justified as "investment in student success." However,
+                            when comparing administrative spend to outcomes like graduation rates, a different picture
+                            emerges. While top-performing peers like Illinois (71%) and Indiana (81%) maintain high outcomes,
+                            Nebraska's 4-year graduation rate sits at 46%—well below the median for its spending level.
+                        </p>
+                        <p style="font-size: 0.7rem; opacity: 0.7; margin-top: 15px;">Data: IPEDS 2023 Graduation Rates
+                            (4-Year Cohort) vs. Administrative Spend.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer / Citations -->
+        <footer class="story-footer">
+            <div class="sources">
+                <h4>SOURCES & DATA</h4>
+                <ul>
+                    <li>Flatwater Free Press: University spending on managers triples</li>
+                    <li>Nebraska Public Media: NU Presidential Salary History</li>
+                    <li>IPEDS Data: 2000-2024 Institutional Headcounts</li>
+                    <li>NU Board of Regents: 2024-2025 Operating Budget Reports</li>
+                </ul>
+                <div
+                    style="margin-top: 4rem; opacity: 0.4; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em;">
+                    &copy; 2026 Daily Nebraskan Investigative Team
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

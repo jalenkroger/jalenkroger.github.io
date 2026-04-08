@@ -1,14 +1,14 @@
 /* Design System & Variables */
 :root {
     /* Color Palette */
-    --color-primary: #59835c;    /* Light green */
-    --color-primary-dark: #2f4238; /* Dark green */
-    --color-accent: #f6ee31;     /* Yellow */
-    --color-dark: #1A1A1A;       /* Secondary Black */
-    --color-darker: #000000;
-    --color-light: #f9fafb;
+    --color-primary: #f6ee31;    /* Yellow */
+    --color-primary-dark: #c4bd27; /* Dark Yellow */
+    --color-accent: #ffffff;     /* White as accent */
+    --color-dark: #222222;       /* Secondary Black */
+    --color-darker: #000000;     /* Core Black */
+    --color-light: #1A1A1A;      /* Off-black for cards/blocks */
     --color-white: #ffffff;
-    --color-gray: #6b7280;
+    --color-gray: #a0aec0;       /* Lighter gray for readability */
     
     /* Typography */
     --font-heading: 'Neue Montreal', sans-serif;
@@ -30,9 +30,9 @@ html {
 
 body {
     font-family: var(--font-body);
-    color: var(--color-dark);
+    color: var(--color-white);
     line-height: 1.6;
-    background-color: var(--color-white);
+    background-color: var(--color-darker);
     overflow-x: hidden;
 }
 
@@ -41,7 +41,7 @@ h1, h2, h3, h4 {
     font-family: var(--font-heading);
     font-weight: 800;
     line-height: 1.2;
-    color: var(--color-darker);
+    color: var(--color-white);
 }
 
 .highlight {
@@ -92,19 +92,19 @@ ul {
 
 .btn-primary {
     background-color: var(--color-primary);
-    color: var(--color-white);
-    box-shadow: 0 4px 15px rgba(89, 131, 92, 0.3); /* primary color */
+    color: var(--color-darker);
+    box-shadow: 0 4px 15px rgba(246, 238, 49, 0.3); /* primary color */
 }
 
 .btn-primary:hover {
     background-color: var(--color-primary-dark);
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(47, 66, 56, 0.4); /* primary-dark color */
+    box-shadow: 0 8px 25px rgba(196, 189, 39, 0.4); /* primary-dark color */
 }
 
 .btn-secondary {
     background-color: var(--color-white);
-    color: var(--color-dark);
+    color: var(--color-darker);
     border: 2px solid transparent;
 }
 
@@ -134,7 +134,7 @@ ul {
     display: inline-block;
     padding: 6px 16px;
     border-radius: 30px;
-    background: rgba(89, 131, 92, 0.2);
+    background: rgba(246, 238, 49, 0.2);
     color: var(--color-primary);
     font-weight: 700;
     font-size: 0.875rem;
@@ -146,8 +146,8 @@ ul {
 }
 
 .badge-accent {
-    background: rgba(246, 238, 49, 0.15);
-    color: var(--color-accent);
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--color-white);
     text-shadow: none;
 }
 
@@ -163,10 +163,10 @@ header {
 }
 
 header.scrolled {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(15px);
     padding: 15px 0;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 30px rgba(246, 238, 49, 0.1);
 }
 
 .nav-container {
@@ -187,7 +187,7 @@ header.scrolled {
 }
 
 header.scrolled .logo-text {
-    color: var(--color-darker);
+    color: var(--color-white);
 }
 
 .nav-links {
@@ -204,7 +204,7 @@ header.scrolled .logo-text {
 }
 
 header.scrolled .nav-links a {
-    color: var(--color-dark);
+    color: var(--color-white);
 }
 
 header .nav-links a.active-link {
@@ -213,7 +213,7 @@ header .nav-links a.active-link {
 }
 
 header.scrolled .nav-links a.active-link {
-    color: var(--color-primary-dark);
+    color: var(--color-primary);
 }
 
 .nav-links a::after {
@@ -366,16 +366,16 @@ header.scrolled .nav-links a.active-link {
 
 .stat-card p {
     font-weight: 600;
-    color: var(--color-dark);
+    color: var(--color-gray);
 }
 
 .highlight-card {
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: white;
+    color: var(--color-darker);
 }
 
 .highlight-card h3, .highlight-card p {
-    color: white;
+    color: var(--color-darker);
 }
 
 /* Programs section */
@@ -386,7 +386,7 @@ header.scrolled .nav-links a.active-link {
 }
 
 .card {
-    background: var(--color-white);
+    background: var(--color-light);
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
@@ -480,6 +480,7 @@ header.scrolled .nav-links a.active-link {
     background: var(--color-darker);
     color: var(--color-white);
     padding: 80px 0 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .footer-grid {
@@ -547,8 +548,8 @@ header.scrolled .nav-links a.active-link {
 
 /* --------------- Subpage Styles --------------- */
 .subpage header.scrolled {
-    background: rgba(255, 255, 255, 1);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 1);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .page-header {
@@ -591,7 +592,7 @@ header.scrolled .nav-links a.active-link {
 .content-block h2 {
     font-size: 2.2rem;
     margin-bottom: 20px;
-    color: var(--color-darker);
+    color: var(--color-white);
     border-bottom: 2px solid var(--color-primary);
     display: inline-block;
     padding-bottom: 10px;
@@ -601,7 +602,7 @@ header.scrolled .nav-links a.active-link {
     font-size: 1.5rem;
     margin-top: 30px;
     margin-bottom: 10px;
-    color: var(--color-darker);
+    color: var(--color-white);
 }
 
 .content-block p {
@@ -648,11 +649,11 @@ header.scrolled .nav-links a.active-link {
 }
 
 .pricing-mini span {
-    background: var(--color-white);
+    background: var(--color-light);
     padding: 8px 16px;
     border-radius: 30px;
     font-weight: 700;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
     box-shadow: 0 4px 10px rgba(0,0,0,0.02);
 }
 
@@ -674,10 +675,10 @@ header.scrolled .nav-links a.active-link {
 }
 
 .pricing-item {
-    background: var(--color-white);
+    background: var(--color-light);
     padding: 25px;
     border-radius: 15px;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
     transition: transform 0.3s ease;
 }
 
@@ -736,7 +737,7 @@ header.scrolled .nav-links a.active-link {
 .pass-price {
     font-size: 2.2rem;
     font-weight: 800;
-    color: var(--color-primary-dark);
+    color: var(--color-primary);
     margin-bottom: 15px;
 }
 
@@ -769,13 +770,13 @@ header.scrolled .nav-links a.active-link {
 .icon-container {
     width: 70px;
     height: 70px;
-    background: var(--color-white);
+    background: var(--color-darker);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px auto;
-    color: var(--color-primary-dark);
+    color: var(--color-primary);
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 
@@ -836,7 +837,7 @@ header.scrolled .nav-links a.active-link {
         top: 100%;
         left: 0;
         width: 100%;
-        background: rgba(255, 255, 255, 0.98);
+        background: rgba(0, 0, 0, 0.98);
         flex-direction: column;
         padding: 20px 0;
         text-align: center;
@@ -850,7 +851,7 @@ header.scrolled .nav-links a.active-link {
     
     .nav-links a,
     header.scrolled .nav-links a {
-        color: var(--color-darker);
+        color: var(--color-white);
         padding: 10px;
         font-size: 1.2rem;
     }
@@ -867,4 +868,52 @@ header.scrolled .nav-links a.active-link {
         grid-template-columns: 1fr;
         gap: 40px;
     }
+}
+
+/* Newsletter CTA */
+.newsletter-cta {
+    background: var(--color-light);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 60px 0;
+    text-align: center;
+}
+
+.newsletter-content h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--color-white);
+}
+
+.newsletter-content p {
+    color: var(--color-gray);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.newsletter-form {
+    display: flex;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+    gap: 10px;
+}
+
+.newsletter-input {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: var(--color-white);
+    font-size: 1rem;
+}
+
+.newsletter-input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.newsletter-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
 }

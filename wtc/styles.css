@@ -1081,3 +1081,67 @@ header .btn.btn-primary:hover {
     outline: none;
     border-color: var(--color-primary);
 }
+
+/* Mobile Devices (Vertical Screens) */
+@media (max-width: 600px) {
+    .hero-title, .page-title {
+        font-size: 2.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+    .mission-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .pricing-grid, 
+    .pass-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-mini {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .newsletter-input, 
+    .newsletter-btn {
+        width: 100%;
+    }
+    
+    .testimonial-images {
+        flex-direction: column;
+    }
+    
+    .testimonial-img-1,
+    .testimonial-img-2 {
+        width: 100%;
+        margin: 0 0 15px 0;
+    }
+    
+    .footer-brand, .footer-links, .footer-contact {
+        text-align: center;
+    }
+    
+    .footer-brand p, .footer-contact p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

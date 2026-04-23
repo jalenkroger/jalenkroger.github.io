@@ -263,10 +263,18 @@ header .btn.btn-primary:hover {
     min-height: 700px;
     display: flex;
     align-items: center;
-    background-image: url('assets/woods%205.jpg');
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
+    background-color: var(--color-darker);
+    overflow: hidden;
+}
+
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
 }
 
 .hero-overlay {

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>University of Nebraska System Salary Search</title>
+<style>
+  :root {
+    --red: #d00000;
+    --red-dark: #a30000;
+    --ink: #1a1a1a;
+    --muted: #5f5f5f;
+    --line: #e3e3e3;
+    --bg: #ffffff;
+    --panel: #f7f7f7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  header {
+    background: var(--red);
+    color: #fff;
+    padding: 28px 20px 24px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+    letter-spacing: 0.2px;
+  }
+  header p {
+    margin: 0;
+    font-size: 0.92rem;
+    opacity: 0.92;
+  }
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 22px 16px 60px;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .controls input[type="search"] {
+    flex: 1 1 260px;
+    padding: 11px 14px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+  }
+  .controls input[type="search"]:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(208,0,0,0.12);
+  }
+  .controls select {
+    padding: 11px 10px;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .table-wrap {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: auto;
+    max-height: 62vh;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.92rem;
+    min-width: 640px;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  thead th.active { color: var(--red); }
+  thead th .arrow { font-size: 0.75em; margin-left: 3px; color: var(--red); }
+  tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: #fbfbfb; }
+  td.salary, th.salary { text-align: right; font-variant-numeric: tabular-nums; }
+  td.fte, th.fte { text-align: right; color: var(--muted); white-space: nowrap; }
+  .campus-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--red-dark);
+    background: rgba(208,0,0,0.08);
+    border-radius: 5px;
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+  .empty-state, .placeholder-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--muted);
+  }
+  footer {
+    max-width: 980px;
+    margin: 28px auto 0;
+    padding: 0 16px 30px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  footer a { color: var(--red-dark); }
+  @media (max-width: 560px) {
+    header h1 { font-size: 1.3rem; }
+    .controls select { flex: 1 1 45%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>University of Nebraska System Salary Search</h1>
+  <p>Search public salary records for employees across the NU system</p>
+</header>
+
+<main>
+  <div class="controls">
+    <input type="search" id="q" placeholder="Search by name or title (e.g. &quot;Smith&quot; or &quot;Professor&quot;)" autocomplete="off">
+    <select id="campus">
+      <option value="">All campuses</option>
+    </select>
+    <select id="sort">
+      <option value="name-asc">Name (A–Z)</option>
+      <option value="salary-desc">Salary (high to low)</option>
+      <option value="salary-asc">Salary (low to high)</option>
+    </select>
+  </div>
+
+  <div class="meta-row">
+    <span id="count"></span>
+    <span id="totalNote"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th data-key="name">Name</th>
+          <th data-key="campus">Campus</th>
+          <th data-key="title">Title</th>
+          <th data-key="fte" class="fte">FTE</th>
+          <th data-key="salary" class="salary">Salary</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="placeholder-state" id="placeholder">Start typing a name above to search, or pick a campus to browse.</div>
+    <div class="empty-state" id="emptyState" style="display:none;">No matches found. Try a different spelling or fewer words.</div>
+  </div>
+
+  <footer>
+    <p>Data reflects University of Nebraska system personnel salary records (UNL, UNL–IANR/Nebraska Extension, UNO, UNK, UNMC, NCTA, and NU System Administration), as provided in the source spreadsheet. Figures shown are the listed base salary and full-time-equivalent (FTE) status for each position; employees appointed at less than 1.0 FTE (e.g. part-time, adjunct, or partial-year roles) will show a lower salary than an equivalent full-time position. A small number of rows in the source data represent unfilled/placeholder budget lines rather than named individuals. This is an independent project and is not an official University of Nebraska system website.</p>
+  </footer>
+</main>
+
+<script src="salary_data.js"></script>
+<script>
+(function () {
+  var rows = SALARY_DATA; // [name, campusCode, title, salary, fte]
+  var campusNames = CAMPUS_NAMES;
+
+  var qInput = document.getElementById('q');
+  var campusSelect = document.getElementById('campus');
+  var sortSelect = document.getElementById('sort');
+  var tbody = document.getElementById('rows');
+  var countEl = document.getElementById('count');
+  var totalNoteEl = document.getElementById('totalNote');
+  var placeholder = document.getElementById('placeholder');
+  var emptyState = document.getElementById('emptyState');
+  var table = document.getElementById('resultsTable');
+
+  var MAX_RENDER = 300;
+
+  // Populate campus filter, sorted by count desc then alpha
+  var campusCounts = {};
+  rows.forEach(function (r) { campusCounts[r[1]] = (campusCounts[r[1]] || 0) + 1; });
+  Object.keys(campusCounts).sort(function (a, b) {
+    return campusCounts[b] - campusCounts[a];
+  }).forEach(function (code) {
+    var opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = (campusNames[code] || code) + ' (' + campusCounts[code].toLocaleString() + ')';
+    campusSelect.appendChild(opt);
+  });
+
+  totalNoteEl.textContent = rows.length.toLocaleString() + ' total records';
+
+  var currencyFmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+  function fmtSalary(n) { return currencyFmt.format(n); }
+  function fmtFte(f) {
+    if (f === null || f === undefined) return '—';
+    return Math.round(f * 100) + '%';
+  }
+
+  function render() {
+    var q = qInput.value.trim().toLowerCase();
+    var campus = campusSelect.value;
+    var sortMode = sortSelect.value;
+
+    if (!q && !campus) {
+      tbody.innerHTML = '';
+      table.style.display = 'none';
+      placeholder.style.display = '';
+      emptyState.style.display = 'none';
+      countEl.textContent = '';
+      return;
+    }
+
+    var terms = q.split(/\s+/).filter(Boolean);
+    var filtered = rows.filter(function (r) {
+      if (campus && r[1] !== campus) return false;
+      if (terms.length === 0) return true;
+      var hay = (r[0] + ' ' + r[2]).toLowerCase();
+      return terms.every(function (t) { return hay.indexOf(t) !== -1; });
+    });
+
+    if (sortMode === 'salary-desc') filtered.sort(function (a, b) { return b[3] - a[3]; });
+    else if (sortMode === 'salary-asc') filtered.sort(function (a, b) { return a[3] - b[3]; });
+    else filtered.sort(function (a, b) { return a[0].localeCompare(b[0]); });
+
+    placeholder.style.display = 'none';
+
+    if (filtered.length === 0) {
+      table.style.display = 'none';
+      emptyState.style.display = '';
+      countEl.textContent = '0 matches';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    table.style.display = '';
+
+    var shown = filtered.slice(0, MAX_RENDER);
+    countEl.textContent = filtered.length.toLocaleString() + ' match' + (filtered.length === 1 ? '' : 'es') +
+      (filtered.length > MAX_RENDER ? ' (showing first ' + MAX_RENDER + ' — refine your search to narrow further)' : '');
+
+    var html = shown.map(function (r) {
+      var name = escapeHtml(r[0]);
+      var campusCode = escapeHtml(r[1]);
+      var campusLabel = escapeHtml(campusNames[r[1]] || r[1]);
+      var title = escapeHtml(r[2] || '—');
+      return '<tr>' +
+        '<td>' + name + '</td>' +
+        '<td><span class="campus-tag" title="' + campusLabel + '">' + campusCode + '</span></td>' +
+        '<td>' + title + '</td>' +
+        '<td class="fte">' + fmtFte(r[4]) + '</td>' +
+        '<td class="salary">' + fmtSalary(r[3]) + '</td>' +
+        '</tr>';
+    }).join('');
+    tbody.innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var debounceTimer;
+  qInput.addEventListener('input', function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(render, 120);
+  });
+  campusSelect.addEventListener('change', render);
+  sortSelect.addEventListener('change', render);
+
+  document.querySelectorAll('thead th[data-key]').forEach(function (th) {
+    th.addEventListener('click', function () {
+      var key = th.getAttribute('data-key');
+      if (key === 'salary') sortSelect.value = sortSelect.value === 'salary-desc' ? 'salary-asc' : 'salary-desc';
+      else sortSelect.value = 'name-asc';
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

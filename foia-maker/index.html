@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nebraska Public Records Request Maker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Nebraska Public Records Request Maker</h1>
+  <p class="sub">
+    Build a records request under Neb. Rev. Stat. &sect;&nbsp;84-712, track the
+    four-business-day clock, and draft the follow-up if that clock runs out.
+  </p>
+</header>
+
+<p class="disclaimer">
+  This tool drafts letters and does arithmetic. It is not legal advice, and it never sends
+  anything on your behalf &mdash; you review and send everything yourself. Verify contact
+  details and statute citations before you send. Deadlines are estimates: the statute excludes
+  days an office is closed, and this tool cannot know every local closure.
+</p>
+
+<nav class="tabs">
+  <button id="tab-build" class="tab active" type="button">Build a request</button>
+  <button id="tab-track" class="tab" type="button">Tracking <span id="track-count"></span></button>
+</nav>
+
+<main>
+
+<section id="panel-build">
+
+  <div class="grid">
+    <div class="col">
+      <h2>1. Who are you asking?</h2>
+
+      <label for="agency">Public body</label>
+      <select id="agency"></select>
+
+      <div id="agency-info" class="info"></div>
+
+      <div id="agency-override" hidden>
+        <label for="agency-name">Body name (as you want it addressed)</label>
+        <input id="agency-name" type="text" placeholder="e.g. Village of Waverly">
+        <label for="agency-address">Mailing address</label>
+        <textarea id="agency-address" rows="3" placeholder="Street, city, ZIP"></textarea>
+      </div>
+
+      <h2>2. What are you asking for?</h2>
+
+      <label for="description">Records sought</label>
+      <textarea id="description" rows="6"
+        placeholder="Be specific. Name the record type, the office that holds it, and any case, contract, or file numbers you know. Example: All emails between the Chief of Police and the Mayor's office containing the word &quot;body camera&quot;."></textarea>
+      <p class="hint">
+        Narrow requests get answered faster. Name the office, the format, and a date range if
+        you can &mdash; a request that looks cheap to fill is harder to refuse.
+      </p>
+
+      <label for="date-range">Date range (optional)</label>
+      <input id="date-range" type="text" placeholder="e.g. January 1, 2025 through June 30, 2025">
+
+      <label for="format-pref">Preferred delivery (optional)</label>
+      <input id="format-pref" type="text" placeholder="e.g. emailed as CSV">
+
+      <h2>3. Fees</h2>
+      <label for="fee-ceiling">Tell me before costs exceed ($)</label>
+      <input id="fee-ceiling" type="number" min="0" step="1" placeholder="25">
+      <label class="check">
+        <input id="fee-waiver" type="checkbox"> Request a fee waiver (public-interest purpose)
+      </label>
+
+      <h2>4. Who is sending it?</h2>
+      <label for="req-name">Your name</label>
+      <input id="req-name" type="text">
+      <label for="req-org">Outlet or organization (optional)</label>
+      <input id="req-org" type="text">
+      <label for="req-email">Email</label>
+      <input id="req-email" type="email">
+      <label for="req-phone">Phone (optional)</label>
+      <input id="req-phone" type="text">
+      <label for="req-address">Mailing address (optional)</label>
+      <input id="req-address" type="text">
+
+      <h2>5. When are you sending it?</h2>
+      <label for="date-sent">Date sent / to be sent</label>
+      <input id="date-sent" type="date">
+      <div id="deadline-box" class="deadline"></div>
+    </div>
+
+    <div class="col">
+      <h2>Your request</h2>
+      <textarea id="letter" rows="30" spellcheck="false"></textarea>
+      <div class="actions">
+        <button id="btn-copy" type="button">Copy</button>
+        <button id="btn-download" type="button">Download .txt</button>
+        <button id="btn-mail" type="button">Open in email</button>
+        <button id="btn-save" type="button" class="primary">Save &amp; start the clock</button>
+      </div>
+      <p class="hint" id="save-hint"></p>
+    </div>
+  </div>
+
+</section>
+
+<section id="panel-track" hidden>
+  <h2>Requests you are tracking</h2>
+  <p class="hint">
+    Tracking is stored in this browser only &mdash; it is not synced, and clearing your site
+    data erases it. Export a backup if the record matters.
+  </p>
+  <div class="actions">
+    <button id="btn-export" type="button">Export JSON</button>
+    <button id="btn-import" type="button">Import JSON</button>
+    <input id="import-file" type="file" accept="application/json" hidden>
+  </div>
+  <div id="tracker-list"></div>
+</section>
+
+</main>
+
+<footer>
+  <p>
+    Statutes cited: <a href="https://nebraskalegislature.gov/laws/statutes.php?statute=84-712">&sect;&nbsp;84-712</a>,
+    <a href="https://nebraskalegislature.gov/laws/statutes.php?statute=84-712.01">&sect;&nbsp;84-712.01</a>,
+    <a href="https://nebraskalegislature.gov/laws/statutes.php?statute=84-712.03">&sect;&nbsp;84-712.03</a>,
+    <a href="https://nebraskalegislature.gov/laws/statutes.php?statute=84-712.04">&sect;&nbsp;84-712.04</a>,
+    <a href="https://nebraskalegislature.gov/laws/statutes.php?statute=84-712.05">&sect;&nbsp;84-712.05</a>,
+    holidays per <a href="https://nebraskalegislature.gov/laws/statutes.php?statute=62-301">&sect;&nbsp;62-301</a>.
+  </p>
+</footer>
+
+<script src="statutes.js"></script>
+<script src="agencies.js"></script>
+<script src="templates.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

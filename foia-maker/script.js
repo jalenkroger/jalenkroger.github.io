@@ -28,10 +28,12 @@ const TERMINAL = ["fulfilled", "denied", "estimate-received"];
 
 function derivedStatus(req) {
   if (TERMINAL.includes(req.status)) return req.status;
+  if (!isIsoDate(req.deadline)) return "undated";
   return ymd(new Date()) > req.deadline ? "overdue" : "awaiting";
 }
 
 function calendarDaysBetween(fromIso, toIso) {
+  if (!isIsoDate(fromIso) || !isIsoDate(toIso)) return null;
   const [y1, m1, d1] = fromIso.split("-").map(Number);
   const [y2, m2, d2] = toIso.split("-").map(Number);
   const a = new Date(y1, m1 - 1, d1);
@@ -187,7 +189,12 @@ function setHint(msg) {
    so the clock reaching zero coincides exactly with derivedStatus() flipping to
    overdue at midnight. Anything earlier (close of business, say) would resolve the
    other way and contradict the rule. */
+function isIsoDate(v) {
+  return typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
+}
+
 function deadlineInstant(iso) {
+  if (!isIsoDate(iso)) return null;
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(y, m - 1, d + 1, 0, 0, 0, 0); // midnight ending the deadline day
 }
@@ -201,7 +208,9 @@ function dayStart(iso) {
    instant the clock counts down to, so the badge and the clock can never
    disagree — two different numbers on one card would undermine both. */
 function overdueParts(deadlineIso, now) {
-  const span = Math.max(0, now - deadlineInstant(deadlineIso));
+  const target = deadlineInstant(deadlineIso);
+  if (!target) return { days: 0, hrs: 0, mins: 0, secs: 0 };
+  const span = Math.max(0, now - target);
   const secs = Math.floor(span / 1000);
   return {
     days: Math.floor(secs / 86400),
@@ -270,6 +279,37 @@ function renderTracker() {
 
   box.innerHTML = list
     .map((req, i) => {
+      try {
+        return card(req, i);
+      } catch (err) {
+        /* One malformed record used to throw here and blank the entire tracker,
+           leaving no way to reach the Delete button that would clear it. */
+        return `
+      <article class="tracked is-done" data-i="${i}">
+        <div class="tracked-body">
+          <h3>Unreadable request <span class="badge done">Damaged</span></h3>
+          <p class="meta">This saved record could not be read. Deleting it will not
+            affect the others.</p>
+          <div class="actions">
+            <button type="button" class="act-danger" data-act="delete" data-i="${i}">Delete</button>
+          </div>
+        </div>
+      </article>`;
+      }
+    })
+    .join("");
+
+  startClocks();
+}
+
+function metaLine(req) {
+  const sent = isIsoDate(req.dateSent) ? `Sent ${longDate(req.dateSent)}` : "Send date not recorded";
+  const due = isIsoDate(req.deadline) ? `due ${longDate(req.deadline)}` : "no due date recorded";
+  return `${sent} &middot; ${due}`;
+}
+
+function card(req, i) {
+  {
       const status = derivedStatus(req);
       const agency = agencyById(req.agencyId);
       const name = req.agencyNameOverride || (agency && agency.name) || "Unknown body";
@@ -283,8 +323,13 @@ function renderTracker() {
           : `<span class="badge over">Overdue</span>`;
         cardClass = "is-over";
       } else if (status === "awaiting") {
-        badge = `<span class="badge ok">Due in ${days} day${days === 1 ? "" : "s"}</span>`;
+        badge = days === null
+          ? `<span class="badge done">No due date</span>`
+          : `<span class="badge ok">Due in ${days} day${days === 1 ? "" : "s"}</span>`;
         cardClass = "is-await";
+      } else if (status === "undated") {
+        badge = `<span class="badge done">No due date</span>`;
+        cardClass = "is-done";
       } else {
         badge = `<span class="badge done">${status.replace("-", " ")}</span>`;
         cardClass = "is-done";
@@ -298,7 +343,7 @@ function renderTracker() {
         ${clockMarkup(req, status)}
         <div class="tracked-body">
           <h3>${name} ${badge}</h3>
-          <p class="meta">Sent ${longDate(req.dateSent)} &middot; due ${longDate(req.deadline)}</p>
+          <p class="meta">${metaLine(req)}</p>
           <p class="desc">${(req.description || "").slice(0, 240)}</p>
           <div class="actions">
             <button type="button" class="act-draft" data-act="followup" data-i="${i}" ${canFollowUp ? "" : "disabled"}>
@@ -312,10 +357,7 @@ function renderTracker() {
           <textarea class="draft" rows="18" hidden></textarea>
         </div>
       </article>`;
-    })
-    .join("");
-
-  startClocks();
+  }
 }
 
 /* ---------- the live clock ----------
@@ -415,6 +457,12 @@ function updateClock(node, now, parity) {
   }
 
   const target = deadlineInstant(node.dataset.deadline);
+  if (!target) {
+    for (const g of FC_GROUPS) setGroup(node, g.key, 0, parity);
+    cap.textContent = "No due date on this record";
+    return "running";
+  }
+
   const overdue = target - now <= 0;
   const secs = Math.floor(Math.abs(target - now) / 1000);
 

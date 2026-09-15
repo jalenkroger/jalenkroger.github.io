@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",      "x": 0,    "y": 0,    "w": 1440, "h": 1120, "title": "Tracking" },
+    { "file": "Request.dc.html",   "x": 1560, "y": 0,    "w": 1440, "h": 1120, "title": "Build a request" },
+    { "file": "FlipClock.dc.html", "x": 0,    "y": 1280, "w": 940,  "h": 620,  "title": "Deadline clock" },
+    { "file": "Mobile.dc.html",    "x": 1060, "y": 1280, "w": 390,  "h": 844,  "title": "Phone" },
+    { "file": "System.dc.html",    "x": 1570, "y": 1280, "w": 940,  "h": 900,  "title": "The system" }
+  ],
+  "annotations": [
+    { "id": "brief", "x": 0, "y": -150, "w": 620, "text": "Per my Last Request — newspaper direction.\nNewsreader + Archivo, ink/newsprint/one red, zero border radius. The deadline clock is a split-flap board: black counts down, red counts up." }
+  ],
+  "launch": { "view": "canvas" }
+}

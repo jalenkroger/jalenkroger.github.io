@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,300..700&display=swap">
+  <style>
+    body { margin: 0; background: #f7f4ee; color: #14120d;
+           font-family: Newsreader, Georgia, "Times New Roman", serif; }
+    a { color: #9c1d14; } a:hover { color: #7d170f; }
+    .sans { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; }
+    .lbl { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; font-size: 10px;
+           font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+
+    .flip { --cw: 46px; --ch: 66px; display: flex; gap: 18px; align-items: flex-start; }
+    .grp { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .cells { display: flex; gap: 4px; }
+    .digit { position: relative; width: var(--cw); height: var(--ch); perspective: 200px; }
+    .half, .leaf { position: absolute; left: 0; width: 100%; height: 50%;
+                   overflow: hidden; background: var(--flap, #1c1a15); }
+    .half { z-index: 1; }
+    .leaf { z-index: 3; backface-visibility: hidden; animation-duration: .28s; animation-fill-mode: both; }
+    .g { position: absolute; left: 0; width: 100%; height: var(--ch); line-height: var(--ch);
+         text-align: center; font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+         font-weight: 600; font-size: calc(var(--ch) * .70); color: #f7f4ee;
+         font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .half.up { top: 0; } .half.up .g { top: 0; }
+    .half.dn { top: 50%; } .half.dn .g { top: calc(var(--ch) * -.5); }
+    .leaf.lt { top: 0; transform-origin: bottom center; animation-timing-function: ease-in; }
+    .leaf.lt .g { top: 0; }
+    .leaf.lb { top: 50%; transform-origin: top center; animation-timing-function: ease-out;
+               animation-delay: .28s; }
+    .leaf.lb .g { top: calc(var(--ch) * -.5); }
+    .digit::after { content: ""; position: absolute; top: calc(50% - 1px); left: 0;
+                    width: 100%; height: 2px; background: #f7f4ee; opacity: .16; z-index: 6; }
+    @keyframes fdA { from { transform: rotateX(0deg); } to { transform: rotateX(-90deg); } }
+    @keyframes fdB { from { transform: rotateX(0deg); } to { transform: rotateX(-90deg); } }
+    @keyframes fuA { from { transform: rotateX(90deg); } to { transform: rotateX(0deg); } }
+    @keyframes fuB { from { transform: rotateX(90deg); } to { transform: rotateX(0deg); } }
+    @media (prefers-reduced-motion: reduce) { .leaf { animation: none !important; } }
+  </style>
+</helmet>
+
+<div style="min-height: 620px; padding: 40px 44px;">
+
+  <div class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: #8a8378;">Component</div>
+  <h2 style="margin: 9px 0 6px; font-size: 32px; font-weight: 600; letter-spacing: -.02em;">The deadline clock</h2>
+  <p style="margin: 0 0 4px; font-size: 16px; line-height: 1.6; color: #4a453c; max-width: 62ch;">A split&#8209;flap board. The statute counts whole business days, so the clock runs to the <em>end</em> of the due date &mdash; reaching zero at the same moment the request turns overdue.</p>
+  <div style="height: 2px; background: #14120d; margin: 22px 0 28px;"></div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 34px 40px;">
+
+    <sc-for list="{{states}}" as="s" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: baseline; gap: 12px;">
+          <div class="lbl" style="color: {{s.tone}};">{{s.name}}</div>
+          <div class="sans" style="font-size: 11.5px; color: #8a8378;">{{s.note}}</div>
+        </div>
+        <div class="flip" style="--flap: {{s.flap}};">
+          <sc-for list="{{s.groups}}" as="g" hint-placeholder-count="4">
+            <div class="grp">
+              <div class="cells">
+                <sc-for list="{{g.digits}}" as="d" hint-placeholder-count="2">
+                  <div class="digit">
+                    <div class="half up"><div class="g">{{d.cur}}</div></div>
+                    <div class="half dn"><div class="g">{{d.prev}}</div></div>
+                    <div class="leaf lt" style="animation-name: {{d.animT}}"><div class="g">{{d.prev}}</div></div>
+                    <div class="leaf lb" style="animation-name: {{d.animB}}"><div class="g">{{d.cur}}</div></div>
+                  </div>
+                </sc-for>
+              </div>
+              <div class="sans" style="font-size: 9px; font-weight: 600; letter-spacing: .18em; color: #8a8378;">{{g.label}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+
+  </div>
+
+  <div style="margin-top: 34px; padding-top: 16px; border-top: 1px solid #d6d0c4; display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+    <div class="sans" style="font-size: 12px; line-height: 1.6; color: #4a453c;"><strong style="font-weight: 600; color: #14120d;">Black counts down, red counts up.</strong> Status is carried by two inks, not a traffic&#8209;light palette &mdash; the same discipline the rest of the page keeps.</div>
+    <div class="sans" style="font-size: 12px; line-height: 1.6; color: #4a453c;"><strong style="font-weight: 600; color: #14120d;">Flaps hold still when nothing changes.</strong> Only the digit that turns animates, so the seconds tick alone for most of a minute. Motion is suppressed entirely under reduced&#8209;motion.</div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":620},"accent":{"editor":"color","default":"#9c1d14","options":["#9c1d14","#14120d","#1d4e6f","#4a5d3a"]}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { t: 0, parity: 0 };
+  }
+  componentDidMount() {
+    var self = this;
+    this.timer = setInterval(function () {
+      self.setState(function (s) { return { t: s.t + 1, parity: s.parity ? 0 : 1 }; });
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  parts(t) {
+    return [Math.floor(t / 86400), Math.floor(t % 86400 / 3600),
+            Math.floor(t % 3600 / 60), t % 60];
+  }
+  board(total, prevTotal, parity) {
+    var labels = ['Days', 'Hours', 'Min', 'Sec'];
+    var cur = this.parts(Math.max(0, total));
+    var prv = this.parts(Math.max(0, prevTotal));
+    var groups = [];
+    for (var i = 0; i < 4; i++) {
+      var c = String(cur[i]).padStart(2, '0');
+      var v = String(prv[i]).padStart(2, '0');
+      var digits = [];
+      for (var j = 0; j < 2; j++) {
+        var changed = c[j] !== v[j];
+        digits.push({
+          cur: c[j],
+          prev: changed ? v[j] : c[j],
+          animT: changed ? (parity ? 'fdA' : 'fdB') : 'none',
+          animB: changed ? (parity ? 'fuA' : 'fuB') : 'none'
+        });
+      }
+      groups.push({ label: labels[i], digits: digits });
+    }
+    return groups;
+  }
+  renderVals() {
+    var t = this.state.t, p = this.state.parity;
+    var accent = this.props.accent ?? '#9c1d14';
+    var down = 3 * 86400 + 6 * 3600 + 41 * 60 + 12 - t;
+    var final = 5 * 3600 + 12 * 60 + 30 - t;
+    var over = 38 * 86400 + 17 * 3600 + 49 * 60 + 24 + t;
+    return {
+      accent: accent,
+      states: [
+        { name: 'Counting', note: 'days remain', flap: '#1c1a15', tone: '#14120d',
+          groups: this.board(down, down + 1, p) },
+        { name: 'Final hours', note: 'under one day', flap: '#1c1a15', tone: '#14120d',
+          groups: this.board(final, final + 1, p) },
+        { name: 'Overdue', note: 'counting up, per § 84-712(4)', flap: accent, tone: accent,
+          groups: this.board(over, over - 1, p) },
+        { name: 'Closed', note: 'records received', flap: '#b8b1a3', tone: '#8a8378',
+          groups: this.board(0, 0, p) }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

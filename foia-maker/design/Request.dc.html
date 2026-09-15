@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,300..700&display=swap">
+  <style>
+    body { margin: 0; background: #f7f4ee; color: #14120d;
+           font-family: Newsreader, Georgia, "Times New Roman", serif; }
+    a { color: #9c1d14; } a:hover { color: #7d170f; }
+    .sans { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; }
+    .lbl { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; font-size: 10px;
+           font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: #8a8378; }
+    .field { border: 1px solid #cfc8ba; background: #fffefb; padding: 11px 13px;
+             font-family: Newsreader, Georgia, serif; font-size: 16px; color: #14120d; }
+    .sec { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; font-size: 10px;
+           font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: #14120d;
+           padding-bottom: 8px; border-bottom: 2px solid #14120d; }
+  </style>
+</helmet>
+
+<div style="min-height: 1120px; padding: 44px 56px 40px; display: flex; flex-direction: column;">
+
+  <!-- masthead -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+    <div>
+      <div class="sans" style="font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #8a8378; margin-bottom: 10px;">Nebraska Public Records</div>
+      <h1 style="margin: 0; font-size: 62px; font-weight: 700; letter-spacing: -.028em; line-height: .96;">Per my Last Request</h1>
+    </div>
+    <div style="display: flex; gap: 30px; padding-bottom: 10px;">
+      <div class="sans" style="font-size: 13px; font-weight: 600; color: #14120d; padding-bottom: 9px; border-bottom: 2px solid {{accent}};">Build a request</div>
+      <div class="sans" style="font-size: 13px; font-weight: 500; color: #4a453c; padding-bottom: 9px; border-bottom: 2px solid transparent;">Tracking <span style="color: #8a8378;">5</span></div>
+    </div>
+  </div>
+
+  <div class="sans" style="display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: #8a8378; margin-top: 22px; padding-bottom: 7px; border-bottom: 1px solid #d6d0c4;">
+    <span>Lincoln, Nebraska &middot; Tuesday, September 15, 2026</span>
+    <span>Neb. Rev. Stat. &sect;&nbsp;84-712</span>
+  </div>
+  <div style="height: 3px; background: {{accent}}; margin-top: 2px;"></div>
+
+  <!-- two columns, divided by a column rule -->
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1.04fr); gap: 44px; padding-top: 36px; flex-grow: 1;">
+
+    <!-- form -->
+    <div style="display: flex; flex-direction: column; gap: 30px;">
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="sec">1 &mdash; Who are you asking</div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div class="lbl">Public body</div>
+          <div class="field" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Lincoln Police Department</span>
+            <span class="sans" style="font-size: 11px; color: #8a8378;">&#9662;</span>
+          </div>
+        </div>
+        <div style="border: 1px solid #cfc8ba; background: #fffefb; padding: 15px 16px; display: flex; flex-direction: column; gap: 9px;">
+          <div class="sans" style="font-size: 13.5px; color: #4a453c; line-height: 1.5;">Records Unit &middot; lpd@cjis.lincoln.ne.gov &middot; (402) 441&#8209;7210</div>
+          <div style="border-left: 3px solid {{accent}}; padding: 8px 0 8px 11px;">
+            <div class="sans" style="font-size: 12.5px; line-height: 1.5; color: #4a453c;"><strong style="font-weight: 600; color: #14120d;">Look this up before sending.</strong> The mailing address could not be confirmed on an official source.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="sec">2 &mdash; What are you asking for</div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div class="lbl">Records sought</div>
+          <div class="field" style="min-height: 104px; line-height: 1.5;">All emails between the Chief of Police and the Mayor&rsquo;s office containing the word &ldquo;body camera&rdquo;.</div>
+          <div class="sans" style="font-size: 12px; color: #8a8378; line-height: 1.55;">Narrow requests get answered faster. Name the office, the format, and a date range &mdash; a request that looks cheap to fill is harder to refuse.</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <div class="lbl">Date range</div>
+            <div class="field" style="color: #8a8378;">Jan 1 &ndash; Jun 30, 2026</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <div class="lbl">Preferred delivery</div>
+            <div class="field" style="color: #8a8378;">Emailed as CSV</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="sec">3 &mdash; Fees</div>
+        <div style="display: grid; grid-template-columns: 200px 1fr; gap: 14px; align-items: end;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <div class="lbl">Tell me before costs exceed</div>
+            <div class="field">$25</div>
+          </div>
+          <div class="sans" style="font-size: 13px; color: #4a453c; display: flex; align-items: center; gap: 9px; padding-bottom: 12px;">
+            <span style="display: inline-block; width: 14px; height: 14px; border: 1.5px solid #14120d; background: #14120d; color: #f7f4ee; font-size: 10px; line-height: 12px; text-align: center;">&#10003;</span>
+            <span>Request a fee waiver &mdash; public-interest purpose</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="sec">4 &mdash; When are you sending it</div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div class="lbl">Date sent</div>
+          <div class="field" style="max-width: 200px;">September 15, 2026</div>
+        </div>
+        <div style="border: 1px solid #14120d; background: #fffefb; padding: 18px 20px;">
+          <div class="lbl" style="color: #8a8378;">Response due &mdash; estimate</div>
+          <div style="font-size: 32px; font-weight: 600; letter-spacing: -.018em; margin: 7px 0 9px;">Monday, September 21, 2026</div>
+          <div class="sans" style="font-size: 12.5px; color: #4a453c; line-height: 1.55;">Four business days from receipt, per &sect;&nbsp;84-712(4). The day you send does not count.</div>
+          <div class="sans" style="font-size: 12.5px; color: {{accent}}; margin-top: 9px; font-weight: 500;">&#9662; Why that date &mdash; 2 days did not count</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- column rule -->
+    <div style="background: #d6d0c4;"></div>
+
+    <!-- letter -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="sec">Your request</div>
+      <div style="border: 1px solid #cfc8ba; background: #fffefb; padding: 34px 38px; flex-grow: 1; font-size: 15.5px; line-height: 1.68; color: #14120d;">
+        <div style="margin-bottom: 20px;">September 15, 2026</div>
+        <div style="margin-bottom: 20px; line-height: 1.5;">Records Unit<br>Lincoln Police Department<br><span style="color: #8a8378;">[Mailing address &mdash; look this up before sending]</span></div>
+        <div style="margin-bottom: 20px;">Re: Public records request under Neb. Rev. Stat. &sect;&nbsp;84-712</div>
+        <div style="margin-bottom: 18px;">Dear Records Custodian:</div>
+        <div style="margin-bottom: 18px;">Under Nebraska&rsquo;s public records statutes, Neb. Rev. Stat. &sect;&nbsp;84-712 et seq., I request access to and copies of the following records:</div>
+        <div style="margin-bottom: 18px; padding-left: 20px; border-left: 2px solid #e2ddd2;">All emails between the Chief of Police and the Mayor&rsquo;s office containing the word &ldquo;body camera&rdquo;.</div>
+        <div class="lbl" style="margin-bottom: 7px;">Format</div>
+        <div style="margin-bottom: 18px;">Neb. Rev. Stat. &sect;&nbsp;84-712.01(1) provides that &ldquo;Data which is a public record in its original form shall remain a public record when maintained in computer files.&rdquo; Where responsive records are kept electronically, I ask that they be provided in their native electronic format.</div>
+        <div class="lbl" style="margin-bottom: 7px;">Fees</div>
+        <div style="margin-bottom: 18px;">Please do not incur costs above $25 without contacting me first. Under &sect;&nbsp;84-712(3), a special service charge may be assessed only where the request requires more than four cumulative hours of work.</div>
+        <div class="lbl" style="margin-bottom: 7px;">Timing</div>
+        <div>Neb. Rev. Stat. &sect;&nbsp;84-712(4) requires that you respond as soon as is practicable and without delay, and not more than four business days after actual receipt. By my calculation that period ends on September 21, 2026.</div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <div class="sans" style="height: 44px; display: flex; align-items: center; padding: 0 20px; border: 1px solid #cfc8ba; background: #fffefb; font-size: 13px; font-weight: 500;">Copy</div>
+        <div class="sans" style="height: 44px; display: flex; align-items: center; padding: 0 20px; border: 1px solid #cfc8ba; background: #fffefb; font-size: 13px; font-weight: 500;">Download</div>
+        <div class="sans" style="height: 44px; display: flex; align-items: center; padding: 0 20px; border: 1px solid #cfc8ba; background: #fffefb; font-size: 13px; font-weight: 500;">Open in email</div>
+        <div class="sans" style="height: 44px; display: flex; align-items: center; padding: 0 24px; background: #14120d; color: #f7f4ee; font-size: 13px; font-weight: 600; margin-left: auto;">Save &amp; start the clock</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":1120},"accent":{"editor":"color","default":"#9c1d14","options":["#9c1d14","#14120d","#1d4e6f","#4a5d3a"]}}'>
+class Component extends DCLogic {
+  renderVals() { return { accent: this.props.accent ?? '#9c1d14' }; }
+}
+</script>
+</body>
+</html>

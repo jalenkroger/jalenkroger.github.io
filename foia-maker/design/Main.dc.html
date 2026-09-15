@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,300..700&display=swap">
+  <style>
+    body { margin: 0; background: #f7f4ee; color: #14120d;
+           font-family: Newsreader, Georgia, "Times New Roman", serif; }
+    a { color: #9c1d14; } a:hover { color: #7d170f; }
+    .sans { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; }
+
+    /* split-flap */
+    .flip { --cw: 68px; --ch: 96px; display: flex; gap: 26px; align-items: flex-start; }
+    .grp { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .cells { display: flex; gap: 5px; }
+    .digit { position: relative; width: var(--cw); height: var(--ch); perspective: 280px; }
+    .half, .leaf { position: absolute; left: 0; width: 100%; height: 50%;
+                   overflow: hidden; background: #1c1a15; }
+    .half { z-index: 1; }
+    .leaf { z-index: 3; backface-visibility: hidden; animation-duration: .28s; animation-fill-mode: both; }
+    .g { position: absolute; left: 0; width: 100%; height: var(--ch); line-height: var(--ch);
+         text-align: center; font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+         font-weight: 600; font-size: calc(var(--ch) * .70); color: #f7f4ee;
+         font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .half.up { top: 0; } .half.up .g { top: 0; }
+    .half.dn { top: 50%; } .half.dn .g { top: calc(var(--ch) * -.5); }
+    .leaf.lt { top: 0; transform-origin: bottom center; animation-timing-function: ease-in; }
+    .leaf.lt .g { top: 0; }
+    .leaf.lb { top: 50%; transform-origin: top center; animation-timing-function: ease-out;
+               animation-delay: .28s; }
+    .leaf.lb .g { top: calc(var(--ch) * -.5); }
+    .digit::after { content: ""; position: absolute; top: calc(50% - 1px); left: 0;
+                    width: 100%; height: 2px; background: #f7f4ee; opacity: .16; z-index: 6; }
+    @keyframes fdA { from { transform: rotateX(0deg); } to { transform: rotateX(-90deg); } }
+    @keyframes fdB { from { transform: rotateX(0deg); } to { transform: rotateX(-90deg); } }
+    @keyframes fuA { from { transform: rotateX(90deg); } to { transform: rotateX(0deg); } }
+    @keyframes fuB { from { transform: rotateX(90deg); } to { transform: rotateX(0deg); } }
+    @media (prefers-reduced-motion: reduce) { .leaf { animation: none !important; } }
+  </style>
+</helmet>
+
+<div style="min-height: 1120px; padding: 44px 56px 40px; display: flex; flex-direction: column;">
+
+  <!-- masthead -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+    <div>
+      <div class="sans" style="font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #8a8378; margin-bottom: 10px;">Nebraska Public Records</div>
+      <h1 style="margin: 0; font-size: 62px; font-weight: 700; letter-spacing: -.028em; line-height: .96; text-wrap: pretty;">Per my Last Request</h1>
+    </div>
+    <div style="display: flex; gap: 30px; padding-bottom: 10px;">
+      <div class="sans" style="font-size: 13px; font-weight: 500; color: #4a453c; padding-bottom: 9px; border-bottom: 2px solid transparent;">Build a request</div>
+      <div class="sans" style="font-size: 13px; font-weight: 600; color: #14120d; padding-bottom: 9px; border-bottom: 2px solid {{accent}};">Tracking <span style="color: #8a8378;">5</span></div>
+    </div>
+  </div>
+
+  <!-- dateline -->
+  <div class="sans" style="display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: #8a8378; margin-top: 22px; padding-bottom: 7px; border-bottom: 1px solid #d6d0c4;">
+    <span>Lincoln, Nebraska &middot; Tuesday, September 15, 2026</span>
+    <span>Neb. Rev. Stat. &sect;&nbsp;84-712</span>
+  </div>
+  <div style="height: 3px; background: {{accent}}; margin-top: 2px;"></div>
+
+  <!-- lead -->
+  <div style="padding: 38px 0 34px; border-bottom: 1px solid #d6d0c4;">
+    <div class="sans" style="font-size: 11px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: {{accent}}; margin-bottom: 14px;">Response due &mdash; Lincoln Police Department</div>
+    <h2 style="margin: 0 0 26px; font-size: 38px; font-weight: 500; line-height: 1.18; letter-spacing: -.016em; max-width: 27ch; text-wrap: pretty;">All incident reports involving drug arrests within city limits, 2023 through 2025.</h2>
+
+    <div class="flip">
+      <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+        <div class="grp">
+          <div class="cells">
+            <sc-for list="{{g.digits}}" as="d" hint-placeholder-count="2">
+              <div class="digit">
+                <div class="half up"><div class="g">{{d.cur}}</div></div>
+                <div class="half dn"><div class="g">{{d.prev}}</div></div>
+                <div class="leaf lt" style="animation-name: {{d.animT}}"><div class="g">{{d.prev}}</div></div>
+                <div class="leaf lb" style="animation-name: {{d.animB}}"><div class="g">{{d.cur}}</div></div>
+              </div>
+            </sc-for>
+          </div>
+          <div class="sans" style="font-size: 10px; font-weight: 600; letter-spacing: .2em; color: #8a8378;">{{g.label}}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div class="sans" style="margin-top: 26px; font-size: 13px; color: #4a453c; display: flex; gap: 26px; align-items: center;">
+      <span>Sent September 14, 2026</span>
+      <span style="color: #d6d0c4;">|</span>
+      <span>Due <strong style="font-weight: 600; color: #14120d;">September 18, 2026</strong> &mdash; estimate</span>
+      <span style="color: #d6d0c4;">|</span>
+      <span>Four business days from receipt, per &sect;&nbsp;84-712(4)</span>
+    </div>
+  </div>
+
+  <!-- ledger -->
+  <div style="padding-top: 30px; flex-grow: 1;">
+    <div class="sans" style="display: grid; grid-template-columns: 272px minmax(0, 1fr) 108px 108px 172px; gap: 24px; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #8a8378; padding-bottom: 10px; border-bottom: 2px solid #14120d;">
+      <div>Public body</div><div>Records sought</div><div>Sent</div><div>Due</div><div style="text-align: right;">Status</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 272px minmax(0, 1fr) 108px 108px 172px; gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid #e2ddd2;">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -.01em;">Nebraska State Patrol</div>
+      <div style="font-size: 16px; color: #4a453c; line-height: 1.45;">Trooper dashcam footage, I&#8209;80 mile marker 401, June 2026</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Aug 1</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Aug 7</div>
+      <div style="text-align: right;"><span class="sans" style="display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: {{accent}}; border: 1.5px solid {{accent}}; padding: 5px 9px;">Overdue 38 days</span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 272px minmax(0, 1fr) 108px 108px 172px; gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid #e2ddd2;">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -.01em;">University of Nebraska</div>
+      <div style="font-size: 16px; color: #4a453c; line-height: 1.45;">Athletic department severance agreements, 2024&ndash;2026</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Sep 9</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Sep 15</div>
+      <div style="text-align: right;"><span class="sans" style="display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #14120d; border: 1.5px solid #14120d; padding: 5px 9px;">Due today</span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 272px minmax(0, 1fr) 108px 108px 172px; gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid #e2ddd2;">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -.01em;">Lancaster County</div>
+      <div style="font-size: 16px; color: #4a453c; line-height: 1.45;">Jail population by charge class, monthly 2026</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Aug 28</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Sep 3</div>
+      <div style="text-align: right;"><span class="sans" style="display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: {{accent}}; border: 1.5px solid {{accent}}; padding: 5px 9px;">Denied</span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 272px minmax(0, 1fr) 108px 108px 172px; gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid #e2ddd2; opacity: .58;">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -.01em;">Lincoln Public Schools</div>
+      <div style="font-size: 16px; color: #4a453c; line-height: 1.45;">District budget workbooks, FY2026</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Sep 1</div>
+      <div class="sans" style="font-size: 13px; color: #4a453c;">Sep 8</div>
+      <div style="text-align: right;"><span class="sans" style="display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #8a8378; border: 1.5px solid #cfc8ba; padding: 5px 9px;">Fulfilled</span></div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="sans" style="display: flex; justify-content: space-between; align-items: center; margin-top: 32px; padding-top: 14px; border-top: 1px solid #d6d0c4; font-size: 11.5px; color: #8a8378;">
+    <span>Drafts letters and counts days. Not legal advice, and nothing is sent on your behalf.</span>
+    <span>Holidays computed per &sect;&nbsp;62-301</span>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":1120},"accent":{"editor":"color","default":"#9c1d14","options":["#9c1d14","#14120d","#1d4e6f","#4a5d3a"]}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    var off = 3 * 86400 + 6 * 3600 + 41 * 60 + 12;
+    this.target = Date.now() + off * 1000;
+    this.state = { left: off, prev: null, parity: 0 };
+  }
+  componentDidMount() {
+    var self = this;
+    this.timer = setInterval(function () {
+      var left = Math.max(0, Math.round((self.target - Date.now()) / 1000));
+      self.setState(function (s) {
+        return { left: left, prev: s.left, parity: s.parity ? 0 : 1 };
+      });
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  parts(t) {
+    return [Math.floor(t / 86400), Math.floor(t % 86400 / 3600),
+            Math.floor(t % 3600 / 60), t % 60];
+  }
+  renderVals() {
+    var labels = ['Days', 'Hours', 'Minutes', 'Seconds'];
+    var cur = this.parts(this.state.left);
+    var prv = this.state.prev === null ? cur : this.parts(this.state.prev);
+    var p = this.state.parity;
+    var groups = [];
+    for (var i = 0; i < 4; i++) {
+      var c = String(cur[i]).padStart(2, '0');
+      var v = String(prv[i]).padStart(2, '0');
+      var digits = [];
+      for (var j = 0; j < 2; j++) {
+        var changed = c[j] !== v[j];
+        digits.push({
+          cur: c[j],
+          prev: changed ? v[j] : c[j],
+          animT: changed ? (p ? 'fdA' : 'fdB') : 'none',
+          animB: changed ? (p ? 'fuA' : 'fuB') : 'none'
+        });
+      }
+      groups.push({ label: labels[i], digits: digits });
+    }
+    return { groups: groups, accent: this.props.accent ?? '#9c1d14' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,300..700&display=swap">
+  <style>
+    body { margin: 0; background: #f7f4ee; color: #14120d;
+           font-family: Newsreader, Georgia, "Times New Roman", serif; }
+    a { color: #9c1d14; } a:hover { color: #7d170f; }
+    .sans { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; }
+    .sec { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; font-size: 10px;
+           font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: #14120d;
+           padding-bottom: 8px; border-bottom: 2px solid #14120d; }
+    .meta { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; font-size: 11px;
+            color: #8a8378; letter-spacing: .02em; }
+  </style>
+</helmet>
+
+<div style="min-height: 900px; padding: 40px 44px;">
+
+  <div class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: #8a8378;">Reference</div>
+  <h2 style="margin: 9px 0 22px; font-size: 32px; font-weight: 600; letter-spacing: -.02em;">The system</h2>
+  <div style="height: 2px; background: #14120d; margin-bottom: 30px;"></div>
+
+  <div style="display: flex; flex-direction: column; gap: 34px;">
+
+    <!-- type -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="sec">Typography &mdash; two families</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 34px;">
+        <div style="display: flex; flex-direction: column; gap: 11px;">
+          <div class="meta">Newsreader &mdash; headlines, body, letters</div>
+          <div style="font-size: 40px; font-weight: 700; letter-spacing: -.026em; line-height: 1;">Per my Last Request</div>
+          <div style="font-size: 22px; font-weight: 500; letter-spacing: -.012em;">Response due September 18</div>
+          <div style="font-size: 16px; line-height: 1.6; color: #4a453c;">A serif built for news reading. It carries the masthead, every headline, and the body of the letters the tool drafts &mdash; the letter is a legal document, and it should look like one.</div>
+          <div class="meta" style="margin-top: 2px;">Falls back to Georgia in PNG and PDF export.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 11px;">
+          <div class="meta">Archivo &mdash; labels, metadata, numerals</div>
+          <div class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;">Section label &middot; 10 / .17em</div>
+          <div class="sans" style="font-size: 13px; font-weight: 500; color: #4a453c;">Interface and controls &middot; 13</div>
+          <div class="sans" style="font-size: 11.5px; color: #8a8378;">Dateline and captions &middot; 11.5</div>
+          <div class="sans" style="font-size: 34px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.02em;">0123456789</div>
+          <div class="meta">Tabular numerals throughout, so the clock never jitters.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- color -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="sec">Ink &mdash; three colors, no more</div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="height: 76px; background: #14120d; border: 1px solid #14120d;"></div>
+          <div class="meta" style="color: #14120d; font-weight: 600;">Ink &middot; #14120D</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="height: 76px; background: {{accent}}; border: 1px solid {{accent}};"></div>
+          <div class="meta" style="color: #14120d; font-weight: 600;">Red &middot; overdue, denied</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="height: 76px; background: #f7f4ee; border: 1px solid #cfc8ba;"></div>
+          <div class="meta" style="color: #14120d; font-weight: 600;">Newsprint &middot; #F7F4EE</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="height: 76px; background: #fffefb; border: 1px solid #cfc8ba;"></div>
+          <div class="meta" style="color: #14120d; font-weight: 600;">Sheet &middot; #FFFEFB</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="height: 76px; background: #d6d0c4; border: 1px solid #cfc8ba;"></div>
+          <div class="meta" style="color: #14120d; font-weight: 600;">Rule &middot; #D6D0C4</div>
+        </div>
+      </div>
+      <div style="font-size: 15.5px; line-height: 1.6; color: #4a453c; max-width: 78ch;">No green, no amber, no traffic lights. A request is either in hand or it is late, and late is the only thing the page raises its voice about &mdash; which is what makes the red mean something when it appears.</div>
+    </div>
+
+    <!-- status -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="sec">Status marks</div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <span class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #14120d; border: 1.5px solid #14120d; padding: 6px 10px;">Due in 3 days</span>
+        <span class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #14120d; border: 1.5px solid #14120d; padding: 6px 10px;">Due today</span>
+        <span class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: {{accent}}; border: 1.5px solid {{accent}}; padding: 6px 10px;">Overdue 38 days</span>
+        <span class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: {{accent}}; border: 1.5px solid {{accent}}; padding: 6px 10px;">Denied</span>
+        <span class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #8a8378; border: 1.5px solid #cfc8ba; padding: 6px 10px;">Fulfilled</span>
+        <span class="sans" style="font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #8a8378; border: 1.5px solid #cfc8ba; padding: 6px 10px;">Estimate received</span>
+      </div>
+    </div>
+
+    <!-- rules -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="sec">Rules and structure</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 34px;">
+        <div style="display: flex; flex-direction: column; gap: 13px;">
+          <div>
+            <div style="height: 3px; background: {{accent}};"></div>
+            <div class="meta" style="margin-top: 6px;">3px red &mdash; under the masthead only, once per page</div>
+          </div>
+          <div>
+            <div style="height: 2px; background: #14120d;"></div>
+            <div class="meta" style="margin-top: 6px;">2px ink &mdash; opens a section or a table</div>
+          </div>
+          <div>
+            <div style="height: 1px; background: #d6d0c4;"></div>
+            <div class="meta" style="margin-top: 6px;">1px rule &mdash; between rows and columns</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-size: 15.5px; line-height: 1.6; color: #4a453c;"><strong style="font-weight: 600; color: #14120d;">Nothing is rounded.</strong> Every corner on every screen is square &mdash; boxes, buttons, fields, status marks, flaps. Newspapers are made of rules and columns, and a single 6px radius would give the whole thing away.</div>
+          <div style="font-size: 15.5px; line-height: 1.6; color: #4a453c;"><strong style="font-weight: 600; color: #14120d;">No shadows, no fills.</strong> Depth comes from rules and whitespace. A card is a hairline box on the sheet, not a floating panel.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":900},"accent":{"editor":"color","default":"#9c1d14","options":["#9c1d14","#14120d","#1d4e6f","#4a5d3a"]}}'>
+class Component extends DCLogic {
+  renderVals() { return { accent: this.props.accent ?? '#9c1d14' }; }
+}
+</script>
+</body>
+</html>

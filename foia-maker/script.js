@@ -348,8 +348,11 @@ function tickClocks() {
   if (needsFlip && !flipping) {
     flipping = true;
     setTimeout(() => {
-      renderTracker();
-      flipping = false;
+      try {
+        renderTracker();
+      } finally {
+        flipping = false;   /* never leave the flip latched if a render throws */
+      }
     }, 0);
   }
 }

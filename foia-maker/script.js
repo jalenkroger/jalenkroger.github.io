@@ -211,31 +211,46 @@ function overdueParts(deadlineIso, now) {
   };
 }
 
-const RING_R = 58;
-const RING_C = 2 * Math.PI * RING_R;
+/* The board reads DD HH MM SS. Each cell is a split flap: two static halves
+   plus two leaves that rotate on a change. Only a digit that actually turns
+   animates, so the seconds tick alone for most of a minute. */
+const FC_GROUPS = [
+  { key: "days", label: "Days" },
+  { key: "hrs", label: "Hrs" },
+  { key: "mins", label: "Min" },
+  { key: "secs", label: "Sec" },
+];
+
+function fcCell() {
+  return `
+          <div class="fc-d">
+            <div class="fc-h fc-up"><div class="fc-g">0</div></div>
+            <div class="fc-h fc-dn"><div class="fc-g">0</div></div>
+            <div class="fc-l fc-lt"><div class="fc-g">0</div></div>
+            <div class="fc-l fc-lb"><div class="fc-g">0</div></div>
+          </div>`;
+}
 
 function clockMarkup(req, status) {
   /* data-state records what this card was RENDERED as. Only an "await" card that
      crosses its deadline mid-tick needs a re-render; an already-overdue card must
      not ask for one every second. */
   const state = TERMINAL.includes(status) ? "done" : status === "overdue" ? "over" : "await";
+  const groups = FC_GROUPS.map(
+    (g) => `
+        <div class="fc-grp">
+          <div class="fc-cells" data-unit="${g.key}">${fcCell()}${fcCell()}</div>
+          <div class="fc-lbl">${g.label}</div>
+        </div>`,
+  ).join("");
+
+  /* aria-hidden: the badge already states the same thing in words, so a screen
+     reader gets the status without a per-second stream of digits. */
   return `
-    <div class="clock" data-deadline="${req.deadline}" data-sent="${req.dateSent}"
-         data-state="${state}" aria-hidden="true">
-      <div class="clock-dial">
-        <svg viewBox="0 0 132 132">
-          <circle class="clock-track" cx="66" cy="66" r="${RING_R}"></circle>
-          <circle class="clock-prog" cx="66" cy="66" r="${RING_R}"
-                  stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="0"></circle>
-          <line class="clock-sweep" x1="66" y1="66" x2="118" y2="66"
-                transform="rotate(0 66 66)"></line>
-        </svg>
-        <div class="clock-face">
-          <span class="clock-num">&mdash;</span>
-          <span class="clock-unit"></span>
-        </div>
+    <div class="clock-wrap">
+      <div class="clock" data-deadline="${req.deadline}" data-sent="${req.dateSent}"
+           data-state="${state}" aria-hidden="true">${groups}
       </div>
-      <div class="clock-time"></div>
       <div class="clock-cap"></div>
     </div>`;
 }
@@ -310,6 +325,7 @@ function renderTracker() {
 
 let clockTimer = null;
 let flipping = false;
+let parity = 0;
 
 function stopClocks() {
   if (clockTimer !== null) {
@@ -320,13 +336,10 @@ function stopClocks() {
 
 function startClocks() {
   stopClocks();
+  if (!document.querySelectorAll(".clock").length) return;
+  tickClocks();   /* paint once — a board of closed requests still needs its zeros */
   if (!document.querySelectorAll(".clock:not([data-state='done'])").length) return;
-  tickClocks();
   clockTimer = setInterval(tickClocks, 1000);
-}
-
-function pad(n) {
-  return String(n).padStart(2, "0");
 }
 
 function tickClocks() {
@@ -338,9 +351,10 @@ function tickClocks() {
 
   let needsFlip = false;
   const now = new Date();
+  parity = parity ? 0 : 1;
 
   for (const node of nodes) {
-    if (updateClock(node, now) === "expired") needsFlip = true;
+    if (updateClock(node, now, parity) === "expired") needsFlip = true;
   }
 
   /* A request that runs out while the user is watching: re-render once so the
@@ -357,65 +371,59 @@ function tickClocks() {
   }
 }
 
-function updateClock(node, now) {
-  const numEl = node.querySelector(".clock-num");
-  const unitEl = node.querySelector(".clock-unit");
-  const timeEl = node.querySelector(".clock-time");
-  const capEl = node.querySelector(".clock-cap");
-  const prog = node.querySelector(".clock-prog");
-  const sweep = node.querySelector(".clock-sweep");
+function setCell(cell, ch, parity) {
+  const shown = cell.dataset.v;
+  const lt = cell.querySelector(".fc-lt");
+  const lb = cell.querySelector(".fc-lb");
+
+  if (shown === ch) {
+    /* Settle: park both leaves on the current digit so nothing stale shows
+       once the previous flip's fill-mode is released. */
+    lt.style.animationName = "none";
+    lb.style.animationName = "none";
+    cell.querySelector(".fc-dn .fc-g").textContent = ch;
+    lt.querySelector(".fc-g").textContent = ch;
+    return;
+  }
+
+  const prev = shown === undefined ? ch : shown;
+  cell.querySelector(".fc-up .fc-g").textContent = ch;    /* new top, revealed */
+  cell.querySelector(".fc-dn .fc-g").textContent = prev;  /* old bottom, covered */
+  lt.querySelector(".fc-g").textContent = prev;           /* old top, falls away */
+  lb.querySelector(".fc-g").textContent = ch;             /* new bottom, drops in */
+
+  /* Alternating names are what restarts the animation on every change. */
+  lt.style.animationName = parity ? "fdA" : "fdB";
+  lb.style.animationName = parity ? "fuA" : "fuB";
+  cell.dataset.v = ch;
+}
+
+function setGroup(node, key, value, parity) {
+  const cells = node.querySelector(`.fc-cells[data-unit="${key}"]`).children;
+  const pair = String(Math.min(99, value)).padStart(2, "0");
+  setCell(cells[0], pair[0], parity);
+  setCell(cells[1], pair[1], parity);
+}
+
+function updateClock(node, now, parity) {
+  const cap = node.parentElement.querySelector(".clock-cap");
 
   if (node.dataset.state === "done") {
-    numEl.innerHTML = "&#10003;";
-    unitEl.textContent = "closed";
-    timeEl.textContent = "";
-    capEl.textContent = "no clock running";
-    prog.setAttribute("stroke-dashoffset", "0");
-    sweep.style.display = "none";
+    for (const g of FC_GROUPS) setGroup(node, g.key, 0, parity);
+    cap.textContent = "Closed — no clock running";
     return "done";
   }
 
   const target = deadlineInstant(node.dataset.deadline);
-  const windowStart = dayStart(node.dataset.sent);
-  const ms = target - now;
-  const overdue = ms <= 0;
-  const span = Math.abs(ms);
+  const overdue = target - now <= 0;
+  const secs = Math.floor(Math.abs(target - now) / 1000);
 
-  const secs = Math.floor(span / 1000);
-  const days = Math.floor(secs / 86400);
-  const hrs = Math.floor((secs % 86400) / 3600);
-  const mins = Math.floor((secs % 3600) / 60);
-  const rem = secs % 60;
+  setGroup(node, "days", Math.floor(secs / 86400), parity);
+  setGroup(node, "hrs", Math.floor((secs % 86400) / 3600), parity);
+  setGroup(node, "mins", Math.floor((secs % 3600) / 60), parity);
+  setGroup(node, "secs", secs % 60, parity);
 
-  if (overdue) {
-    if (days >= 1) {
-      numEl.textContent = days;
-      unitEl.textContent = days === 1 ? "day over" : "days over";
-    } else {
-      numEl.textContent = hrs;
-      unitEl.textContent = hrs === 1 ? "hour over" : "hours over";
-    }
-    capEl.textContent = "since the deadline";
-    prog.setAttribute("stroke-dashoffset", "0");
-  } else {
-    if (days >= 1) {
-      numEl.textContent = days;
-      unitEl.textContent = days === 1 ? "day left" : "days left";
-    } else {
-      numEl.textContent = hrs;
-      unitEl.textContent = hrs === 1 ? "hour left" : "hours left";
-    }
-    capEl.textContent = "until the end of the due date";
-
-    const total = target - windowStart;
-    const fracLeft = total > 0 ? Math.max(0, Math.min(1, ms / total)) : 0;
-    prog.setAttribute("stroke-dashoffset", (RING_C * (1 - fracLeft)).toFixed(1));
-  }
-
-  timeEl.innerHTML =
-    `${pad(hrs)}:${pad(mins)}<span class="clock-sec">:${pad(rem)}</span>`;
-
-  sweep.setAttribute("transform", `rotate(${rem * 6} 66 66)`);
+  cap.textContent = overdue ? "Since the deadline" : "Until the end of the due date";
 
   return overdue && node.dataset.state === "await" ? "expired" : "running";
 }
@@ -477,6 +485,12 @@ function showTab(which) {
 function init() {
   populateAgencies();
   el("date-sent").value = ymd(new Date());
+
+  el("dateline-today").textContent =
+    "Lincoln, Nebraska \u00b7 " +
+    new Date().toLocaleDateString("en-US", {
+      weekday: "long", month: "long", day: "numeric", year: "numeric",
+    });
 
   const inputs = [
     "agency", "agency-name", "agency-address", "description", "date-range",

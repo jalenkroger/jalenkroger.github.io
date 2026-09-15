@@ -7,7 +7,9 @@ petition when that clock runs out.
 Published at `jalenkroger.github.io/foia-maker/` — the directory name is the URL and is
 deliberately unchanged by the rename.
 
-Vanilla HTML/CSS/JS. No build step, no dependencies, no backend — open `index.html` and it works.
+Vanilla HTML/CSS/JS. No build step and no backend — open `index.html` and it works. The only
+network dependency is the pair of webfonts (Newsreader and Archivo, from Google Fonts); when they
+don't load the page falls back to Georgia and Helvetica and everything still works.
 
 ## What it does
 
@@ -22,6 +24,11 @@ Vanilla HTML/CSS/JS. No build step, no dependencies, no backend — open `index.
    unlocks a follow-up letter; a denial or an ignored follow-up unlocks the AG petition.
 
 ## The clock
+
+A split-flap board reading days, hours, minutes, seconds. It counts down in black and, once a
+deadline is blown, counts up in red; a closed request's board goes grey and stops. Only a digit
+that actually turns animates, so the seconds tick alone for most of a minute, and under
+`prefers-reduced-motion` the flaps don't move at all.
 
 The statute counts whole business days, so the deadline is a date, not a timestamp. The countdown
 therefore targets **the end of the deadline date**. That follows the same tie-break the holiday
@@ -111,3 +118,15 @@ python3 -m http.server 8765
 - Contact details and statute citations were verified on the date in each `verifiedOn` field.
   Staff change and statutes get renumbered. Check before you send.
 - This is not legal advice.
+
+## Design
+
+Newspaper idiom: Newsreader over Archivo, a masthead with a dateline strip and a single red rule,
+ledger rows on hairlines, and no rounded corners anywhere.
+
+Three colors — ink, newsprint, and one red. Status is carried by black versus red rather than a
+traffic-light palette: a request is either in hand or it is late, and late is the only thing the
+page raises its voice about, which is what makes the red mean something when it appears. Green
+would spend that signal on the ordinary case.
+
+The design canvas the screens were drawn on lives in `design/` as `.dc.html` artboards.

@@ -210,3 +210,18 @@ a sweep hand, and a ticking readout. It targets the end of the deadline date —
 same resolve-later tie-break as the holiday math, and verified to coincide exactly with the
 `derivedStatus()` flip to overdue. `overdueParts()` is now the single source for "how overdue",
 which fixed a real off-by-one where the badge said 39 days and the clock said 38.
+
+## Addendum — 2026-09-15 (design)
+
+Applied a newspaper visual language across the tool: Newsreader and Archivo, a masthead with a
+dateline and one red rule, square corners throughout, and status carried by black-versus-red
+instead of a traffic-light palette.
+
+The tracker's ring clock became a split-flap board. It keeps every property the ring had — one
+interval for all cards, ticks that mutate only the clock's own nodes so an open draft survives,
+`aria-hidden` with the badge carrying the state in words, and the end-of-deadline-day target that
+coincides with the flip to overdue. Flaps restart their animation via alternating keyframe names,
+since a re-render never remounts the cells.
+
+Webfonts are the one new network dependency and fall back to Georgia/Helvetica.
+Artboards for the direction are in `design/`.

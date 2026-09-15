@@ -53,3 +53,6 @@ rsconnect/
 
 # macOS
 .DS_Store
+
+# Seeded design canvas: 2.4MB of editor payload, regenerated from design/*.dc.html
+foia-maker/design/per-my-last-request.html

@@ -1,8 +1,11 @@
-# Nebraska Public Records Request Maker
+# Per my Last Request
 
 A static tool that builds a Nebraska public-records request tailored to the body you're asking,
 tracks the four-business-day response clock, and drafts the follow-up and Attorney General
 petition when that clock runs out.
+
+Published at `jalenkroger.github.io/foia-maker/` — the directory name is the URL and is
+deliberately unchanged by the rename.
 
 Vanilla HTML/CSS/JS. No build step, no dependencies, no backend — open `index.html` and it works.
 
@@ -14,8 +17,22 @@ Vanilla HTML/CSS/JS. No build step, no dependencies, no backend — open `index.
 2. **Computes the deadline.** Neb. Rev. Stat. § 84-712(4) gives a custodian four business days from
    receipt. The tool excludes the day you send, weekends, and Nebraska's legal holidays, and shows
    its work.
-3. **Tracks the clock.** Saved requests get a due/overdue badge. When one goes overdue it unlocks a
-   follow-up letter; a denial or an ignored follow-up unlocks the AG petition.
+3. **Tracks the clock.** Saved requests get a live countdown — a ring that depletes across the
+   response window and a ticking readout — plus a due/overdue badge. When one goes overdue it
+   unlocks a follow-up letter; a denial or an ignored follow-up unlocks the AG petition.
+
+## The clock
+
+The statute counts whole business days, so the deadline is a date, not a timestamp. The countdown
+therefore targets **the end of the deadline date**. That follows the same tie-break the holiday
+math uses — where a boundary is ambiguous, resolve it later, never earlier — and it means the
+clock reaching zero happens at exactly the moment the request flips to overdue.
+
+The badge and the countdown both read from `overdueParts()` so they can never show two different
+numbers for the same request.
+
+One interval drives every card. Ticks mutate only the clock's own nodes, never the card's markup,
+so a follow-up letter you have open mid-read survives the seconds going by.
 
 ## What it deliberately does not do
 
@@ -32,7 +49,7 @@ address sends your request into a void and you don't find out for weeks.
 |---|---|
 | `index.html` | Page structure |
 | `style.css` | Styling |
-| `script.js` | Form handling, tracker, localStorage |
+| `script.js` | Form handling, tracker, live clock, localStorage |
 | `statutes.js` | Citations, § 84-712.05 exemptions, § 62-301 holiday math |
 | `agencies.js` | The public bodies |
 | `templates.js` | The three letters |

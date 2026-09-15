@@ -1,4 +1,4 @@
-# Nebraska FOIA Request Maker
+# Per my Last Request (Nebraska FOIA Request Maker)
 
 ## The original goal
 
@@ -190,3 +190,23 @@ path it feeds was tested directly.
 
 Automated sending, email reminders, cross-device sync, accounts, and a backend — each needs
 infrastructure this repo doesn't have. JSON export is the deliberate stand-in for sync.
+
+---
+
+## Addendum — 2026-09-15
+
+Renamed to **Per my Last Request**. The `foia-maker/` directory and the `foia-maker.requests`
+localStorage key are both unchanged: the first is the published URL, the second would orphan
+every tracked request of anyone already using the tool.
+
+Visual language reworked — the three bordered callouts (disclaimer, caution, deadline) had
+identical treatment and so carried identical weight; they are now a quiet rule, an amber flag,
+and an elevated result card respectively. Section headers became uppercase sans labels, which
+freed the type scale for content. Tracker buttons went from five equal-weight controls to three
+tiers, and the letter panel is sticky on desktop.
+
+Added a live countdown to each tracked request: a ring that depletes across the response window,
+a sweep hand, and a ticking readout. It targets the end of the deadline date — derived from the
+same resolve-later tie-break as the holiday math, and verified to coincide exactly with the
+`derivedStatus()` flip to overdue. `overdueParts()` is now the single source for "how overdue",
+which fixed a real off-by-one where the badge said 39 days and the clock said 38.

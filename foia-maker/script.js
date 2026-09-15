@@ -148,8 +148,8 @@ function renderDeadline(req) {
       `</ul></details>`
     : "";
   el("deadline-box").innerHTML =
-    `<strong>Response due ${longDate(req.deadline)}</strong> ` +
-    `<span class="asof">(estimate)</span>` +
+    `<span class="dl-label">Response due &mdash; estimate</span>` +
+    `<strong class="dl-date">${longDate(req.deadline)}</strong>` +
     `<p class="hint">Four business days from receipt, per &sect;&nbsp;84-712(4). The day you ` +
     `send does not count.</p>` +
     skipped;
@@ -181,7 +181,68 @@ function setHint(msg) {
 
 /* ---------- tracker ---------- */
 
+/* The deadline is a date, not a timestamp. § 84-712(4) counts whole business days,
+   and statutes.js resolves genuine ambiguity toward "closed" — later, never earlier.
+   Applied to time-of-day that puts the target at the very end of the deadline date,
+   so the clock reaching zero coincides exactly with derivedStatus() flipping to
+   overdue at midnight. Anything earlier (close of business, say) would resolve the
+   other way and contradict the rule. */
+function deadlineInstant(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d + 1, 0, 0, 0, 0); // midnight ending the deadline day
+}
+
+function dayStart(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d, 0, 0, 0, 0);
+}
+
+/* Single source of truth for "how overdue is this". Measured from the expiry
+   instant the clock counts down to, so the badge and the clock can never
+   disagree — two different numbers on one card would undermine both. */
+function overdueParts(deadlineIso, now) {
+  const span = Math.max(0, now - deadlineInstant(deadlineIso));
+  const secs = Math.floor(span / 1000);
+  return {
+    days: Math.floor(secs / 86400),
+    hrs: Math.floor((secs % 86400) / 3600),
+    mins: Math.floor((secs % 3600) / 60),
+    secs: secs % 60,
+  };
+}
+
+const RING_R = 58;
+const RING_C = 2 * Math.PI * RING_R;
+
+function clockMarkup(req, status) {
+  /* data-state records what this card was RENDERED as. Only an "await" card that
+     crosses its deadline mid-tick needs a re-render; an already-overdue card must
+     not ask for one every second. */
+  const state = TERMINAL.includes(status) ? "done" : status === "overdue" ? "over" : "await";
+  return `
+    <div class="clock" data-deadline="${req.deadline}" data-sent="${req.dateSent}"
+         data-state="${state}" aria-hidden="true">
+      <div class="clock-dial">
+        <svg viewBox="0 0 132 132">
+          <circle class="clock-track" cx="66" cy="66" r="${RING_R}"></circle>
+          <circle class="clock-prog" cx="66" cy="66" r="${RING_R}"
+                  stroke-dasharray="${RING_C.toFixed(1)}" stroke-dashoffset="0"></circle>
+          <line class="clock-sweep" x1="66" y1="66" x2="118" y2="66"
+                transform="rotate(0 66 66)"></line>
+        </svg>
+        <div class="clock-face">
+          <span class="clock-num">&mdash;</span>
+          <span class="clock-unit"></span>
+        </div>
+      </div>
+      <div class="clock-time"></div>
+      <div class="clock-cap"></div>
+    </div>`;
+}
+
 function renderTracker() {
+  stopClocks();
+
   const list = loadRequests();
   el("track-count").textContent = list.length ? `(${list.length})` : "";
   const box = el("tracker-list");
@@ -199,37 +260,161 @@ function renderTracker() {
       const name = req.agencyNameOverride || (agency && agency.name) || "Unknown body";
       const days = calendarDaysBetween(ymd(new Date()), req.deadline);
 
-      let badge;
+      let badge, cardClass;
       if (status === "overdue") {
-        const over = Math.abs(days);
-        badge = `<span class="badge over">Overdue by ${over} day${over === 1 ? "" : "s"}</span>`;
+        const over = overdueParts(req.deadline, new Date()).days;
+        badge = over >= 1
+          ? `<span class="badge over">Overdue by ${over} day${over === 1 ? "" : "s"}</span>`
+          : `<span class="badge over">Overdue</span>`;
+        cardClass = "is-over";
       } else if (status === "awaiting") {
         badge = `<span class="badge ok">Due in ${days} day${days === 1 ? "" : "s"}</span>`;
+        cardClass = "is-await";
       } else {
         badge = `<span class="badge done">${status.replace("-", " ")}</span>`;
+        cardClass = "is-done";
       }
 
       const canFollowUp = status === "overdue";
       const canPetition = status === "overdue" || status === "denied";
 
       return `
-      <article class="tracked" data-i="${i}">
-        <h3>${name} ${badge}</h3>
-        <p class="meta">Sent ${longDate(req.dateSent)} &middot; due ${longDate(req.deadline)}</p>
-        <p class="desc">${(req.description || "").slice(0, 240)}</p>
-        <div class="actions">
-          <button type="button" data-act="followup" data-i="${i}" ${canFollowUp ? "" : "disabled"}>
-            Draft follow-up</button>
-          <button type="button" data-act="petition" data-i="${i}" ${canPetition ? "" : "disabled"}>
-            Draft AG petition</button>
-          <button type="button" data-act="denied" data-i="${i}">Mark denied</button>
-          <button type="button" data-act="fulfilled" data-i="${i}">Mark fulfilled</button>
-          <button type="button" data-act="delete" data-i="${i}">Delete</button>
+      <article class="tracked ${cardClass}" data-i="${i}">
+        ${clockMarkup(req, status)}
+        <div class="tracked-body">
+          <h3>${name} ${badge}</h3>
+          <p class="meta">Sent ${longDate(req.dateSent)} &middot; due ${longDate(req.deadline)}</p>
+          <p class="desc">${(req.description || "").slice(0, 240)}</p>
+          <div class="actions">
+            <button type="button" class="act-draft" data-act="followup" data-i="${i}" ${canFollowUp ? "" : "disabled"}>
+              Draft follow-up</button>
+            <button type="button" class="act-draft" data-act="petition" data-i="${i}" ${canPetition ? "" : "disabled"}>
+              Draft AG petition</button>
+            <button type="button" class="act-quiet" data-act="denied" data-i="${i}">Mark denied</button>
+            <button type="button" class="act-quiet" data-act="fulfilled" data-i="${i}">Mark fulfilled</button>
+            <button type="button" class="act-danger" data-act="delete" data-i="${i}">Delete</button>
+          </div>
+          <textarea class="draft" rows="18" hidden></textarea>
         </div>
-        <textarea class="draft" rows="18" hidden></textarea>
       </article>`;
     })
     .join("");
+
+  startClocks();
+}
+
+/* ---------- the live clock ----------
+   One module-level interval for every card. Ticks mutate only the clock's own
+   nodes — never the card's innerHTML — so an open draft letter and the page
+   scroll position survive each second. */
+
+let clockTimer = null;
+let flipping = false;
+
+function stopClocks() {
+  if (clockTimer !== null) {
+    clearInterval(clockTimer);
+    clockTimer = null;
+  }
+}
+
+function startClocks() {
+  stopClocks();
+  if (!document.querySelectorAll(".clock:not([data-state='done'])").length) return;
+  tickClocks();
+  clockTimer = setInterval(tickClocks, 1000);
+}
+
+function pad(n) {
+  return String(n).padStart(2, "0");
+}
+
+function tickClocks() {
+  const nodes = document.querySelectorAll(".clock");
+  if (!nodes.length) {
+    stopClocks();
+    return;
+  }
+
+  let needsFlip = false;
+  const now = new Date();
+
+  for (const node of nodes) {
+    if (updateClock(node, now) === "expired") needsFlip = true;
+  }
+
+  /* A request that runs out while the user is watching: re-render once so the
+     badge and the follow-up button catch up. Guarded so it cannot loop. */
+  if (needsFlip && !flipping) {
+    flipping = true;
+    setTimeout(() => {
+      renderTracker();
+      flipping = false;
+    }, 0);
+  }
+}
+
+function updateClock(node, now) {
+  const numEl = node.querySelector(".clock-num");
+  const unitEl = node.querySelector(".clock-unit");
+  const timeEl = node.querySelector(".clock-time");
+  const capEl = node.querySelector(".clock-cap");
+  const prog = node.querySelector(".clock-prog");
+  const sweep = node.querySelector(".clock-sweep");
+
+  if (node.dataset.state === "done") {
+    numEl.innerHTML = "&#10003;";
+    unitEl.textContent = "closed";
+    timeEl.textContent = "";
+    capEl.textContent = "no clock running";
+    prog.setAttribute("stroke-dashoffset", "0");
+    sweep.style.display = "none";
+    return "done";
+  }
+
+  const target = deadlineInstant(node.dataset.deadline);
+  const windowStart = dayStart(node.dataset.sent);
+  const ms = target - now;
+  const overdue = ms <= 0;
+  const span = Math.abs(ms);
+
+  const secs = Math.floor(span / 1000);
+  const days = Math.floor(secs / 86400);
+  const hrs = Math.floor((secs % 86400) / 3600);
+  const mins = Math.floor((secs % 3600) / 60);
+  const rem = secs % 60;
+
+  if (overdue) {
+    if (days >= 1) {
+      numEl.textContent = days;
+      unitEl.textContent = days === 1 ? "day over" : "days over";
+    } else {
+      numEl.textContent = hrs;
+      unitEl.textContent = hrs === 1 ? "hour over" : "hours over";
+    }
+    capEl.textContent = "since the deadline";
+    prog.setAttribute("stroke-dashoffset", "0");
+  } else {
+    if (days >= 1) {
+      numEl.textContent = days;
+      unitEl.textContent = days === 1 ? "day left" : "days left";
+    } else {
+      numEl.textContent = hrs;
+      unitEl.textContent = hrs === 1 ? "hour left" : "hours left";
+    }
+    capEl.textContent = "until the end of the due date";
+
+    const total = target - windowStart;
+    const fracLeft = total > 0 ? Math.max(0, Math.min(1, ms / total)) : 0;
+    prog.setAttribute("stroke-dashoffset", (RING_C * (1 - fracLeft)).toFixed(1));
+  }
+
+  timeEl.innerHTML =
+    `${pad(hrs)}:${pad(mins)}<span class="clock-sec">:${pad(rem)}</span>`;
+
+  sweep.setAttribute("transform", `rotate(${rem * 6} 66 66)`);
+
+  return overdue && node.dataset.state === "await" ? "expired" : "running";
 }
 
 function handleTrackerClick(e) {
@@ -282,7 +467,8 @@ function showTab(which) {
   el("panel-track").hidden = build;
   el("tab-build").classList.toggle("active", build);
   el("tab-track").classList.toggle("active", !build);
-  if (!build) renderTracker();
+  if (build) stopClocks();     /* nothing to animate while the panel is hidden */
+  else renderTracker();        /* which restarts them */
 }
 
 function init() {

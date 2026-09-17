@@ -72,7 +72,8 @@ Add an entry to `AGENCIES` in `agencies.js`:
   type: "city",
   contactRole: "Village Clerk",   // durable — roles outlive people
   contactName: null,              // a person; shown as "as of <verifiedOn>"
-  address: null,                  // null if you could not confirm it
+  address: null,                  // street lines only, "\n" between them, null if unconfirmed
+                                  // (the letter already prints contactRole and name above it)
   email: null,
   phone: null,
   portalUrl: null,                // if the body runs its own request system

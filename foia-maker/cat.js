@@ -24,14 +24,18 @@
   <g class="cat-pose cat-pose-sit">
     <path class="cat-tail" d="M88 130 C112 128, 120 104, 112 84"></path>
     <g class="cat-trunk">
-      <path class="cat-ear cat-ear-l" d="M40 28 L34 4 L58 20 Z"></path>
-      <path class="cat-ear cat-ear-r" d="M80 28 L86 4 L62 20 Z"></path>
       <path class="cat-body" d="M60 44 C40 44, 30 70, 28 100 C26 124, 32 138, 44 138 L76 138 C88 138, 94 124, 92 100 C90 70, 80 44, 60 44 Z"></path>
-      <circle class="cat-head" cx="60" cy="42" r="26"></circle>
-    </g>
-    <g class="cat-eyes">
-      <ellipse class="cat-eye" cx="50" cy="40" rx="4.5" ry="6"></ellipse>
-      <ellipse class="cat-eye" cx="70" cy="40" rx="4.5" ry="6"></ellipse>
+      <g class="cat-headg">
+        <path class="cat-ear cat-ear-l" d="M40 28 L34 4 L58 20 Z"></path>
+        <path class="cat-ear cat-ear-r" d="M80 28 L86 4 L62 20 Z"></path>
+        <circle class="cat-head" cx="60" cy="42" r="26"></circle>
+        <g class="cat-eyes">
+          <g class="cat-gaze">
+            <ellipse class="cat-eye" cx="50" cy="40" rx="4.5" ry="6"></ellipse>
+            <ellipse class="cat-eye" cx="70" cy="40" rx="4.5" ry="6"></ellipse>
+          </g>
+        </g>
+      </g>
     </g>
   </g>
   <g class="cat-pose cat-pose-sleep">
@@ -141,22 +145,26 @@
       return { key: "agency:caution:" + agency.id, text: agency.caution };
     }
 
+    if (agency.portalUrl) {
+      return {
+        key: "agency:portal:" + agency.id,
+        text: "This body runs its own request system. Using it is usually faster than mailing a letter, and the statutory clock is the same either way.",
+      };
+    }
+
+    /* Only worth raising when it would actually block you. A missing street address
+       does not matter for a body you can reach by portal or email, and nagging about
+       it there would bury the route you should be taking. */
     const missing =
       typeof missingContactFields === "function" ? missingContactFields(agency) : [];
-    if (missing.length) {
+    const blocking = missing.filter((f) => f !== "phone");
+    if (blocking.length && !agency.email) {
       return {
         key: "agency:missing:" + agency.id,
         text:
           "No confirmed " +
-          missing.join(" or ") +
+          blocking.join(" or ") +
           " for this body. Look it up on their own site before you send — a plausible wrong address loses you weeks.",
-      };
-    }
-
-    if (agency.portalUrl) {
-      return {
-        key: "agency:portal:" + agency.id,
-        text: "This body runs its own request system. Using it is often faster than mailing a letter, but the statutory clock is the same either way.",
       };
     }
 
@@ -215,23 +223,39 @@
       this.build = this.makeDock("cat-dock", "sit", true);
       this.track = this.makeDock("cat-dock cat-dock-track", "sleep", false);
 
-      const actions = document.querySelector("#panel-build .actions");
-      if (actions && this.build) actions.insertAdjacentElement("afterend", this.build.root);
+      /* The cat perches on a section rule at the top of its panel, where it stays in
+         view — the right column is sticky, so anything parked below the letter falls
+         off the bottom on a short window. The heading keeps its rule; the cat just
+         stands on it, and the bubble drops underneath so nothing reflows sideways. */
+      this.perch(document.querySelector("#panel-build .grid .col:last-of-type"), this.build);
 
       /* Sibling of #tracker-list, never inside it: renderTracker() replaces that
          container's innerHTML wholesale and would take the cat with it. */
-      const list = document.getElementById("tracker-list");
-      if (list && this.track) list.insertAdjacentElement("beforebegin", this.track.root);
+      this.perch(document.getElementById("panel-track"), this.track);
 
       this.refillQueue();
     },
 
-    makeDock(cls, pose, clickable) {
-      const root = document.createElement("div");
-      root.className = cls;
+    perch(container, dock) {
+      if (!container || !dock) return;
+      const heading = container.querySelector("h2");
+      if (!heading) return;
 
+      const rail = document.createElement("div");
+      rail.className = "cat-rail";
+      heading.parentNode.insertBefore(rail, heading);
+      rail.appendChild(heading);
+      rail.appendChild(dock.fig);
+
+      /* Inside the rail, which is the positioning context: the bubble is taken out
+         of flow so a remark never shoves the letter down the page. Only the cat you
+         can click ever gets one — the tracker cat is ambient and says nothing. */
+      if (dock.bubble) rail.appendChild(dock.bubble);
+    },
+
+    makeDock(cls, pose, clickable) {
       const holder = document.createElement(clickable ? "button" : "div");
-      holder.className = "cat-fig";
+      holder.className = "cat-fig " + cls;
       if (clickable) {
         holder.type = "button";
         holder.setAttribute("aria-label", "Ask the desk cat");
@@ -243,19 +267,17 @@
       const svg = holder.querySelector(".cat-svg");
       if (svg) svg.setAttribute("data-pose", pose);
 
-      const bubble = document.createElement("p");
-      bubble.className = "cat-say";
-      bubble.setAttribute("role", "status");
-      bubble.setAttribute("aria-live", "polite");
-      bubble.hidden = true;
-
-      root.appendChild(holder);
-      root.appendChild(bubble);
-
+      let bubble = null;
       if (clickable) {
+        bubble = document.createElement("p");
+        bubble.className = "cat-say";
+        bubble.setAttribute("role", "status");
+        bubble.setAttribute("aria-live", "polite");
+        bubble.hidden = true;
+        bubble.addEventListener("click", () => this.hush());
         holder.addEventListener("click", () => this.onClick());
       }
-      return { root: root, button: holder, bubble: bubble, svg: svg };
+      return { fig: holder, bubble: bubble, svg: svg };
     },
 
     /* --- speaking --- */

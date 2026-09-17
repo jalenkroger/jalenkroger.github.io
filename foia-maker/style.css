@@ -271,7 +271,9 @@ textarea { resize: vertical; }
 .info p:last-child { margin-bottom: 0; }
 
 ul.contact { list-style: none; margin: 0 0 0.5rem; padding: 0; }
-ul.contact li { font-family: var(--sans); font-size: 0.84rem; color: var(--ink-2); padding: 0.1rem 0; }
+/* Addresses carry their own line breaks so the letter's address block reads like
+   one; the panel honours them too rather than running the street onto one line. */
+ul.contact li { font-family: var(--sans); font-size: 0.84rem; color: var(--ink-2); padding: 0.1rem 0; white-space: pre-line; }
 
 .asof { color: var(--ink-3); font-size: 0.85em; font-family: var(--sans); }
 
@@ -557,21 +559,31 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
    A silhouette in ink, never red: red on this page means late or refused, and
    spending it on an ornament would cost the badges their meaning. */
 
-.cat-dock {
+/* The heading keeps its rule and the cat stands on it. align-items: flex-end puts
+   the cat's feet on the baseline rule; the negative margin lets it overhang the
+   rule slightly so it reads as sitting on it rather than floating above. */
+.cat-rail {
+  position: relative;      /* the bubble hangs off this, out of flow */
   display: flex;
-  align-items: flex-start;
-  gap: 0.9rem;
-  margin-top: 1rem;
+  align-items: flex-end;
+  gap: 1rem;
 }
+
+.cat-rail > h2 {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+.cat-rail > .cat-fig { margin-bottom: -2px; }
 
 /* Specificity has to clear button:not(.tab), which is (0,1,1) and would
    otherwise keep its 1.15rem side padding and hairline border — with
    box-sizing: border-box that leaves about 5px of content to draw a cat in. */
-.cat-dock .cat-fig {
+.cat-fig.cat-dock {
   flex: 0 0 auto;
   display: block;
-  width: 44px;
-  height: 55px;
+  width: 58px;
+  height: 73px;
   min-height: 44px;
   padding: 0;
   background: none;
@@ -581,13 +593,13 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
   cursor: pointer;
 }
 
-.cat-dock div.cat-fig { cursor: default; }
+div.cat-fig.cat-dock { cursor: default; }
 
-.cat-dock .cat-fig:hover { background: none; }
+.cat-fig.cat-dock:hover { background: none; }
 
-.cat-dock .cat-fig:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.cat-fig.cat-dock:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 
-.cat-dock .cat-svg { display: block; width: 44px; height: 55px; overflow: visible; }
+.cat-dock .cat-svg { display: block; width: 58px; height: 73px; overflow: visible; }
 
 .cat-body, .cat-head, .cat-ear { fill: var(--ink); }
 .cat-eye { fill: var(--paper); }
@@ -616,7 +628,7 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
 .cat-svg[data-pose="sleep"] .cat-pose-sleep { display: block; }
 
 /* transform-box is what makes transform-origin mean anything on an SVG child. */
-.cat-tail, .cat-ear, .cat-eyes, .cat-trunk {
+.cat-tail, .cat-ear, .cat-eyes, .cat-trunk, .cat-headg, .cat-gaze {
   transform-box: fill-box;
 }
 
@@ -624,15 +636,25 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
 .cat-ear   { transform-origin: 50% 100%; }
 .cat-eyes  { transform-origin: 50% 50%; }
 .cat-trunk { transform-origin: 50% 100%; }
+.cat-headg { transform-origin: 50% 100%; }   /* the neck, not the crown */
+.cat-gaze  { transform-origin: 50% 50%; }
 
 /* Durations are deliberately not multiples of each other, so the tail, the
    blink and the breath drift out of phase instead of ticking together. */
-.cat-tail  { animation: catTail 4.2s ease-in-out infinite; }
-.cat-eyes  { animation: catBlink 6.4s ease-in-out infinite; }
-.cat-trunk { animation: catBreathe 3.7s ease-in-out infinite; }
+.cat-tail   { animation: catTail 4.2s ease-in-out infinite; }
+.cat-eyes   { animation: catBlink 6.4s ease-in-out infinite; }
+.cat-trunk  { animation: catBreathe 3.7s ease-in-out infinite; }
+.cat-headg  { animation: catHeadTurn 11s ease-in-out infinite; }
+.cat-gaze   { animation: catGaze 8.6s ease-in-out infinite; }
+.cat-ear-l  { animation: catEarTwitch 7.3s ease-in-out infinite; }
+.cat-ear-r  { animation: catEarTwitch 9.1s ease-in-out infinite; }
 
-.cat-fig:hover .cat-ear,
-.cat-fig:focus-visible .cat-ear { animation: catEar 0.4s ease-in-out; }
+/* Hover perks both ears at once — the one moment the cat is deliberately
+   symmetrical, which is what makes it read as a reaction to you. */
+.cat-fig:hover .cat-ear-l,
+.cat-fig:hover .cat-ear-r,
+.cat-fig:focus-visible .cat-ear-l,
+.cat-fig:focus-visible .cat-ear-r { animation: catEar 0.4s ease-in-out; }
 
 .cat-svg[data-pose="alert"] .cat-pose-sit { animation: catAlert 0.5s ease-out; }
 .cat-svg[data-pose="alert"] .cat-tail { animation-duration: 1.6s; }
@@ -642,9 +664,46 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
   50%      { transform: rotate(8deg); }
 }
 
+/* A single blink, then a double a cycle later — cats rarely blink evenly. */
 @keyframes catBlink {
-  0%, 92%, 100% { transform: scaleY(1); }
-  95%           { transform: scaleY(0.1); }
+  0%, 40%, 100% { transform: scaleY(1); }
+  43%           { transform: scaleY(0.08); }
+  46%           { transform: scaleY(1); }
+  88%           { transform: scaleY(1); }
+  91%           { transform: scaleY(0.08); }
+  94%           { transform: scaleY(1); }
+  96%           { transform: scaleY(0.08); }
+  98%           { transform: scaleY(1); }
+}
+
+/* Head turn and gaze run on different clocks, so the cat looks around rather
+   than swivelling its eyes and head as one piece. */
+@keyframes catHeadTurn {
+  0%, 100% { transform: rotate(0deg); }
+  18%      { transform: rotate(-5deg); }
+  34%      { transform: rotate(-4deg); }
+  52%      { transform: rotate(0deg); }
+  70%      { transform: rotate(4.5deg); }
+  86%      { transform: rotate(1deg); }
+}
+
+/* User units, not CSS px: the 120-wide viewBox renders at 58px, so these are
+   scaled down by about half on screen. */
+@keyframes catGaze {
+  0%, 100% { transform: translateX(0); }
+  22%      { transform: translateX(-3.5px); }
+  38%      { transform: translateX(-3.5px); }
+  55%      { transform: translateX(0); }
+  74%      { transform: translateX(3.5px); }
+  88%      { transform: translateX(1.5px); }
+}
+
+/* Mostly still, with one quick flick near the end of each cycle. */
+@keyframes catEarTwitch {
+  0%, 82%, 100% { transform: rotate(0deg); }
+  86%           { transform: rotate(-11deg); }
+  90%           { transform: rotate(3deg); }
+  94%           { transform: rotate(0deg); }
 }
 
 @keyframes catBreathe {
@@ -664,31 +723,69 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
 
 /* The bubble is square, like everything else here, and is tied to the cat by
    the same 2px rule the disclaimer uses rather than a pointer triangle. */
+/* A real speech bubble, drawn the way this page draws everything else: square
+   corners, a hairline, newsprint-white fill. It hangs out of flow beneath the cat
+   so a remark never pushes the letter down — it sits over the top of it instead. */
 .cat-say {
-  flex: 1 1 auto;
+  position: absolute;
+  top: calc(100% + 11px);
+  right: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: min(46ch, 100%);
   margin: 0;
-  padding: 0.55rem 0 0.55rem 0.85rem;
-  border-left: 2px solid var(--ink);
+  padding: 0.7rem 0.9rem;
+  background: var(--sheet);
+  border: 1px solid var(--ink);
+  border-radius: 0;
   font-family: var(--sans);
   font-size: 0.84rem;
   line-height: 1.6;
   color: var(--ink-2);
-  max-width: 58ch;
+  cursor: pointer;
+}
+
+/* The tail of the bubble: two stacked triangles, the back one the border colour
+   and the front one the fill, offset by a pixel so the hairline carries around
+   the point. No radius anywhere, which is the whole idea. */
+.cat-say::before,
+.cat-say::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  width: 0;
+  height: 0;
+  border: 9px solid transparent;
+  border-top: 0;
+}
+
+.cat-say::before {
+  right: 20px;
+  border-bottom: 9px solid var(--ink);
+}
+
+.cat-say::after {
+  right: 21px;
+  border-width: 8px;
+  border-top: 0;
+  border-bottom: 8px solid var(--sheet);
+  margin-bottom: -1px;
 }
 
 .cat-say-text { display: block; }
 
 .cat-cite {
   display: block;
-  margin-top: 0.3rem;
+  margin-top: 0.4rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--rule-2);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
   color: var(--ink-3);
 }
 
-.cat-dock-track { margin: 0 0 1.25rem; }
-.cat-dock-track .cat-fig,
-.cat-dock-track .cat-svg { width: 52px; height: 62px; }
+.cat-fig.cat-dock-track,
+.cat-fig.cat-dock-track .cat-svg { width: 70px; height: 83px; }
 
 /* ---------- footer ---------- */
 

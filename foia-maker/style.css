@@ -543,6 +543,8 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
 
 @media (prefers-reduced-motion: reduce) {
   .fc-l { animation: none !important; }
+  /* The cat still changes pose and still speaks; it just holds still. */
+  .cat-svg, .cat-svg * { animation: none !important; }
 }
 
 @media (max-width: 760px) {
@@ -550,6 +552,143 @@ button.act-danger:hover:not(:disabled) { color: var(--red); border-color: var(--
   .clock { --cw: 34px; --ch: 48px; }
   button.act-danger { margin-left: 0; }
 }
+
+/* ---------- the desk cat ----------
+   A silhouette in ink, never red: red on this page means late or refused, and
+   spending it on an ornament would cost the badges their meaning. */
+
+.cat-dock {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* Specificity has to clear button:not(.tab), which is (0,1,1) and would
+   otherwise keep its 1.15rem side padding and hairline border — with
+   box-sizing: border-box that leaves about 5px of content to draw a cat in. */
+.cat-dock .cat-fig {
+  flex: 0 0 auto;
+  display: block;
+  width: 44px;
+  height: 55px;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.cat-dock div.cat-fig { cursor: default; }
+
+.cat-dock .cat-fig:hover { background: none; }
+
+.cat-dock .cat-fig:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+.cat-dock .cat-svg { display: block; width: 44px; height: 55px; overflow: visible; }
+
+.cat-body, .cat-head, .cat-ear { fill: var(--ink); }
+.cat-eye { fill: var(--paper); }
+
+.cat-tail {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 11;
+  stroke-linecap: round;
+}
+
+.cat-tail-sleep { stroke-width: 10; }
+
+.cat-lid {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+/* One SVG carries both poses; only the matching one is painted, so switching
+   poses never restarts the idle animations on the other. */
+.cat-pose { display: none; }
+.cat-svg[data-pose="sit"]   .cat-pose-sit,
+.cat-svg[data-pose="alert"] .cat-pose-sit,
+.cat-svg[data-pose="sleep"] .cat-pose-sleep { display: block; }
+
+/* transform-box is what makes transform-origin mean anything on an SVG child. */
+.cat-tail, .cat-ear, .cat-eyes, .cat-trunk {
+  transform-box: fill-box;
+}
+
+.cat-tail  { transform-origin: 0% 100%; }
+.cat-ear   { transform-origin: 50% 100%; }
+.cat-eyes  { transform-origin: 50% 50%; }
+.cat-trunk { transform-origin: 50% 100%; }
+
+/* Durations are deliberately not multiples of each other, so the tail, the
+   blink and the breath drift out of phase instead of ticking together. */
+.cat-tail  { animation: catTail 4.2s ease-in-out infinite; }
+.cat-eyes  { animation: catBlink 6.4s ease-in-out infinite; }
+.cat-trunk { animation: catBreathe 3.7s ease-in-out infinite; }
+
+.cat-fig:hover .cat-ear,
+.cat-fig:focus-visible .cat-ear { animation: catEar 0.4s ease-in-out; }
+
+.cat-svg[data-pose="alert"] .cat-pose-sit { animation: catAlert 0.5s ease-out; }
+.cat-svg[data-pose="alert"] .cat-tail { animation-duration: 1.6s; }
+
+@keyframes catTail {
+  0%, 100% { transform: rotate(-6deg); }
+  50%      { transform: rotate(8deg); }
+}
+
+@keyframes catBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(0.1); }
+}
+
+@keyframes catBreathe {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.02); }
+}
+
+@keyframes catEar {
+  0%, 100% { transform: rotate(0deg); }
+  40%      { transform: rotate(-9deg); }
+}
+
+@keyframes catAlert {
+  0%   { transform: translateY(6px) scaleY(0.94); }
+  100% { transform: translateY(0) scaleY(1); }
+}
+
+/* The bubble is square, like everything else here, and is tied to the cat by
+   the same 2px rule the disclaimer uses rather than a pointer triangle. */
+.cat-say {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 0.55rem 0 0.55rem 0.85rem;
+  border-left: 2px solid var(--ink);
+  font-family: var(--sans);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 58ch;
+}
+
+.cat-say-text { display: block; }
+
+.cat-cite {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.cat-dock-track { margin: 0 0 1.25rem; }
+.cat-dock-track .cat-fig,
+.cat-dock-track .cat-svg { width: 52px; height: 62px; }
 
 /* ---------- footer ---------- */
 

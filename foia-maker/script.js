@@ -162,6 +162,7 @@ function render() {
   renderAgencyInfo(req);
   renderDeadline(req);
   el("letter").value = TEMPLATES.initial(req);
+  if (window.Cat) Cat.onRender(req);
   return req;
 }
 
@@ -300,6 +301,7 @@ function renderTracker() {
     .join("");
 
   startClocks();
+  if (window.Cat) Cat.onTracker(list);
 }
 
 function metaLine(req) {
@@ -528,6 +530,7 @@ function showTab(which) {
   el("tab-track").classList.toggle("active", !build);
   if (build) stopClocks();     /* nothing to animate while the panel is hidden */
   else renderTracker();        /* which restarts them */
+  if (window.Cat) Cat.onTab(which);
 }
 
 function init() {
@@ -587,6 +590,7 @@ function init() {
     if (saveRequests(list)) {
       setHint(`Saved. Response due ${longDate(req.deadline)}.`);
       el("track-count").textContent = `(${list.length})`;
+      if (window.Cat) Cat.onSave(req);
     } else {
       setHint("Could not save — your browser is blocking site storage.");
     }

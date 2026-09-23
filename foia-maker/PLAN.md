@@ -112,7 +112,14 @@ foia-maker/
 ### `agencies.js`
 
 Covers Lincoln Police Department, Nebraska State Patrol, University of Nebraska, Lincoln Public
-Schools, City of Lincoln, Lancaster County, Nebraska DHHS, and a generic "other" fallback.
+Schools, City of Lincoln, Lancaster County, Nebraska DHHS, 22 major Nebraska state departments
+and agencies (added 2026-09-22 — Revenue, Correctional Services, Education, Transportation,
+Labor, DMV, Agriculture, the newly-merged Department of Water, Energy, and Environment,
+Insurance, Banking and Finance, Economic Development, Game and Parks, Administrative Services,
+Veterans' Affairs, the Crime Commission, Public Service Commission, Secretary of State, State
+Treasurer, Auditor of Public Accounts, the Attorney General's Office as a records custodian in
+its own right, Workers' Compensation Court, and the Liquor Control Commission), and a generic
+"other" fallback.
 
 Contacts are **looked up from each body's official site, never guessed.** Anything unconfirmed ships
 as `null` and renders as "look this up" with a link to `sourceUrl`. A plausible wrong address sends a
@@ -161,13 +168,15 @@ because a cleared cache would otherwise silently destroy a reporter's tracking r
 
 ## Verification
 
-Date math, tested directly (8/8 passing):
+Date math, automated (8/8 passing, `node tests/date-math.test.js`):
 
 - Day of receipt excluded; Thursday and Friday sends cross the weekend correctly.
 - **Arbor Day** (Fri 2026-04-24) pushes a deadline into the following week.
 - **Thanksgiving week** loses both Thursday and Friday.
 - A Sunday July 4 (2027) correctly consumes the observed Monday.
 - A late-December send spans the year boundary into 2027.
+- A holiday-free week is a plain 4-weekday count.
+- `isWeekend`/`holidayName` agree with the calendar directly.
 
 In the browser, over HTTP (the preview pane renders local `file://` pages as a static snapshot, so
 linked `<script>` files never execute there — use `python3 -m http.server 8765`):

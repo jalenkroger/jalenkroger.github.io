@@ -3,6 +3,14 @@
 const STORAGE_KEY = "foia-maker.requests";
 const el = (id) => document.getElementById(id);
 
+/* Tracked requests round-trip through localStorage and JSON import, so a card's own
+   text (agency name override, description) is not trusted before it lands in
+   innerHTML — escape it the same as any other untrusted string. */
+const HTML_ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => HTML_ESCAPES[c]);
+}
+
 /* ---------- storage ---------- */
 
 function loadRequests() {
@@ -258,7 +266,7 @@ function clockMarkup(req, status) {
      reader gets the status without a per-second stream of digits. */
   return `
     <div class="clock-wrap">
-      <div class="clock" data-deadline="${req.deadline}" data-sent="${req.dateSent}"
+      <div class="clock" data-deadline="${escapeHtml(req.deadline)}" data-sent="${escapeHtml(req.dateSent)}"
            data-state="${state}" aria-hidden="true">${groups}
       </div>
       <div class="clock-cap"></div>
@@ -344,9 +352,9 @@ function card(req, i) {
       <article class="tracked ${cardClass}" data-i="${i}">
         ${clockMarkup(req, status)}
         <div class="tracked-body">
-          <h3>${name} ${badge}</h3>
+          <h3>${escapeHtml(name)} ${badge}</h3>
           <p class="meta">${metaLine(req)}</p>
-          <p class="desc">${(req.description || "").slice(0, 240)}</p>
+          <p class="desc">${escapeHtml((req.description || "").slice(0, 240))}</p>
           <div class="actions">
             <button type="button" class="act-draft" data-act="followup" data-i="${i}" ${canFollowUp ? "" : "disabled"}>
               Draft follow-up</button>

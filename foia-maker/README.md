@@ -58,7 +58,7 @@ address sends your request into a void and you don't find out for weeks.
 | `style.css` | Styling |
 | `script.js` | Form handling, tracker, live clock, localStorage |
 | `statutes.js` | Citations, § 84-712.05 exemptions, § 62-301 holiday math |
-| `agencies.js` | The public bodies |
+| `agencies.js` | The public bodies (Lincoln-area local bodies plus 22 major Nebraska state departments/agencies) |
 | `templates.js` | The three letters |
 
 ## Adding a public body
@@ -110,6 +110,16 @@ browser. To serve it over HTTP:
 
 ```bash
 python3 -m http.server 8765
+```
+
+## Tests
+
+The § 84-712(4)/§ 62-301 date math has automated regression tests in `tests/date-math.test.js`
+(plain Node, no dependencies — it loads `statutes.js` in a `vm` sandbox rather than importing it,
+since the app files stay dependency-free `<script>` globals):
+
+```bash
+node tests/date-math.test.js
 ```
 
 ## Caveats

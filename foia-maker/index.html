@@ -4,6 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Per my Last Request — Nebraska public records requests</title>
+<meta name="description" content="Build a Nebraska public-records request under Neb. Rev. Stat. § 84-712, track the four-business-day response clock, and draft the follow-up and Attorney General petition the moment it runs out.">
+<link rel="canonical" href="https://jalenkroger.github.io/foia-maker/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Per my Last Request — Nebraska public records requests">
+<meta property="og:description" content="Build a Nebraska public-records request, track the four-business-day response clock, and draft the follow-up and AG petition the moment it runs out.">
+<meta property="og:url" content="https://jalenkroger.github.io/foia-maker/">
+<meta property="og:image" content="https://jalenkroger.github.io/foia-maker/favicon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Per my Last Request — Nebraska public records requests">
+<meta name="twitter:description" content="Build a Nebraska public-records request, track the four-business-day response clock, and draft the follow-up and AG petition the moment it runs out.">
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,300..700&display=swap">
@@ -31,7 +44,9 @@
   This tool drafts letters and does arithmetic. It is not legal advice, and it never sends
   anything on your behalf &mdash; you review and send everything yourself. Verify contact
   details and statute citations before you send. Deadlines are estimates: the statute excludes
-  days an office is closed, and this tool cannot know every local closure.
+  days an office is closed, and this tool cannot know every local closure. Everything you type
+  stays on your device &mdash; there is no server, so nothing you enter here is ever
+  transmitted, logged, or seen by anyone but you.
 </p>
 
 <nav class="tabs">
@@ -49,6 +64,12 @@
 
       <label for="agency">Public body</label>
       <select id="agency"></select>
+      <p class="hint">
+        This v1 covers Lincoln-area bodies plus 22 major Nebraska state departments and
+        agencies in detail. Requesting from a city, county, or district that isn't listed?
+        Choose &ldquo;Another Nebraska public body&rdquo; &mdash; the letter and deadline
+        math still work, you'll just confirm the mailing address yourself.
+      </p>
 
       <div id="agency-info" class="info"></div>
 

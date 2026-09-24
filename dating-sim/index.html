@@ -3,26 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>College Hearts: Comms & Connections</title>
+    <title>Harvest Hearts</title>
+    <meta name="description" content="A Nebraska dating sim. Four locals, one fall festival, and a question you won't see coming.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <main id="game">
+        <div class="bg" id="bg-a"></div>
+        <div class="bg" id="bg-b"></div>
 
-    <div id="game-container">
-        <div id="background-image-container"></div> <div id="sprite-container">
-            <img id="character-sprite" src="" alt="Character Sprite">
+        <header class="hud" id="hud" hidden>
+            <span class="hud-title">Harvest Hearts</span>
+            <ol class="dance-card" id="dance-card" aria-label="Dance card"></ol>
+        </header>
+
+        <div id="stage">
+            <div id="portrait" aria-hidden="true"></div>
         </div>
-        
-        <div id="dialogue-box">
-            <div id="speaker-name-box">
-                <span id="speaker-name"></span>
+
+        <section id="dialogue" hidden>
+            <div id="name-tag" hidden></div>
+            <p id="text" aria-live="polite"></p>
+            <div id="choices"></div>
+        </section>
+
+        <section id="title-screen" class="screen">
+            <div class="title-card">
+                <p class="kicker">Harlan Creek, Nebraska &middot; Fall Festival</p>
+                <h1>Harvest<br>Hearts</h1>
+                <p class="tagline">Four locals. One week of dates. A question you won't see coming.</p>
+                <form id="start-form">
+                    <label for="player-name">What should everyone call you?</label>
+                    <div class="start-row">
+                        <input id="player-name" name="player-name" maxlength="18" autocomplete="off" placeholder="Your name" required>
+                        <button type="submit" class="btn primary">Start</button>
+                    </div>
+                </form>
+                <p class="fineprint">About 10 minutes. Answer like yourself, not like you think you should.</p>
             </div>
-            <p id="dialogue-text"></p>
-            <div id="choices-container">
-                </div>
-        </div>
-    </div>
+        </section>
 
+        <section id="results" class="screen" hidden></section>
+    </main>
+
+    <script src="art.js"></script>
+    <script src="story.js"></script>
     <script src="game.js"></script>
 </body>
 </html>

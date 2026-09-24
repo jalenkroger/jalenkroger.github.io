@@ -364,13 +364,14 @@ html, body {
 .tagline { font-size: 1.1rem; line-height: 1.45; margin: 18px 0 22px; }
 #start-form label { display: block; margin-bottom: 8px; font-size: 0.95rem; color: var(--gold-soft); }
 .start-row { display: flex; gap: 8px; }
+.start-row input::placeholder { color: #8a7a6e; }
 .start-row input {
     flex: 1;
     min-width: 0;
     padding: 12px 14px;
     font: inherit;
     font-size: 1rem;
-    color: var(--ink);
+    color: #2a1e1a;
     background: var(--cream);
     border: 2px solid var(--gold);
     border-radius: 10px;

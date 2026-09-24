@@ -161,8 +161,8 @@ const ART = (() => {
         out += `<path d="M${x + w / 2 - 30} 850 L${x + w / 2} 800 L${x + w / 2 + 30} 850Z" fill="#1a0f1f"/>`;
         // Pennant on top, fluttering
         out += `<line x1="${x + w / 2}" y1="${780 - h}" x2="${x + w / 2}" y2="${740 - h}" stroke="#1a0f1f" stroke-width="3"/>
-            <path d="M${x + w / 2} ${740 - h} l30 8 l-30 8Z" fill="${b}">
-                <animateTransform attributeName="transform" type="skewY" values="0;-8;0;6;0" ${loop(1.6, x / 300)}/></path>`;
+            <path d="M${x + w / 2} ${740 - h} q15 2 30 8 q-15 2 -30 8Z" fill="${b}">
+                <animate attributeName="d" values="M${x + w / 2} ${740 - h} q15 2 30 8 q-15 2 -30 8Z;M${x + w / 2} ${740 - h} q15 -2 28 6 q-13 6 -28 10Z;M${x + w / 2} ${740 - h} q15 2 30 8 q-15 2 -30 8Z" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" ${loop(2.6, x / 300)}/></path>`;
         return out;
     }
 
@@ -179,12 +179,20 @@ const ART = (() => {
         return out;
     }
 
+    // A far-off bird: two curved wings that ease up and down, drifting across the sky
     function crane(x, y, s, dur, begin) {
-        return `<g><animateTransform attributeName="transform" type="translate" values="-200 40;1900 -60" ${loop(dur, begin)}/>
+        const up = 'M-26 -4 Q-14 -14 0 0 Q14 -14 26 -4';
+        const mid = 'M-26 1 Q-13 -5 0 0 Q13 -5 26 1';
+        const down = 'M-24 9 Q-12 5 0 0 Q12 5 24 9';
+        const ease = 'calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1"';
+        return `<g><animateTransform attributeName="transform" type="translate" values="-200 30;900 -10;1900 20" ${loop(dur, begin)}/>
             <g transform="translate(${x} ${y}) scale(${s})">
-                <path d="M-20 0 Q0 -14 20 0" stroke="#5a2f2a" stroke-width="4" fill="none">
-                    <animate attributeName="d" values="M-20 0 Q0 -14 20 0;M-20 0 Q0 10 20 0;M-20 0 Q0 -14 20 0" ${loop(0.9, begin)}/>
-                </path><line x1="0" y1="0" x2="16" y2="-2" stroke="#5a2f2a" stroke-width="3"/>
+                <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" ${loop(3.2, begin * 2)}/>
+                    <path d="${up}" stroke="#5a2f2a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <animate attributeName="d" values="${up};${mid};${down};${mid};${up}" ${ease} ${loop(1.4, begin)}/>
+                    </path>
+                    <ellipse cx="0" cy="1" rx="5" ry="3" fill="#5a2f2a"/>
+                </g>
             </g></g>`;
     }
 
